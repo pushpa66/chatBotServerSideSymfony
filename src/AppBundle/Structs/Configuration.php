@@ -11,7 +11,8 @@ namespace AppBundle\Structs;
 
 class Configuration
 {
-    const ngrokUrl = "https://e58188dc.ngrok.io";
+//    const ngrokUrl = "https://e58188dc.ngrok.io";
+    const ngrokUrl = "http://139.59.6.58";
     const trackProductApiUrl = Configuration::ngrokUrl."/chatbot-master/web/app_dev.php/api/track?asin=";
     const removeTrackedProductApiUrl = Configuration::ngrokUrl."/chatbot-master/web/app_dev.php/api/removeTrackedProduct?asin=";
     const botID = "5a968c95e4b05207f7628608";
