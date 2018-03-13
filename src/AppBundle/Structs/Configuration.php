@@ -11,10 +11,12 @@ namespace AppBundle\Structs;
 
 class Configuration
 {
-//    const ngrokUrl = "https://e58188dc.ngrok.io";
-    const ngrokUrl = "http://139.59.6.58";
-    const trackProductApiUrl = Configuration::ngrokUrl."/chatbot-master/web/app_dev.php/api/track?asin=";
-    const removeTrackedProductApiUrl = Configuration::ngrokUrl."/chatbot-master/web/app_dev.php/api/removeTrackedProduct?asin=";
+//    const serverUrl = "https://e58188dc.ngrok.io";
+//    const projectFolder = "chatbot-master";
+    const serverUrl = "http://139.59.6.58";
+    const projectFolder = "chatBotServerSideSymfony";
+    const trackProductApiUrl = Configuration::serverUrl."/".Configuration::projectFolder."/web/app_dev.php/api/track?asin=";
+    const removeTrackedProductApiUrl = Configuration::serverUrl."/".Configuration::projectFolder."/web/app_dev.php/api/removeTrackedProduct?asin=";
     const botID = "5a968c95e4b05207f7628608";
     const token = "vnbqX6cpvXUXFcOKr5RHJ7psSpHDRzO1hXBY8dkvn50ZkZyWML3YdtoCnKH7FSjC";
     const blockID = "5aa3ad07e4b094306df10a53";
