@@ -7,6 +7,8 @@
  */
 
 namespace AppBundle\Controller;
+
+
 use AppBundle\Entity\Notification;
 use AppBundle\Structs\Configuration;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -23,7 +25,8 @@ class NotificationController extends Controller
     /**
      * @Route("/api/checkNotifications", name="checkNotifications")
      */
-    public function checkNotification(){
+
+    public function checkNotifications(){
         $result = $this->getNotificationsFromKeepa();
 
         if($result!= null) {
@@ -94,7 +97,6 @@ class NotificationController extends Controller
                 }
             }
         }
-
         return new JsonResponse("");
     }
 

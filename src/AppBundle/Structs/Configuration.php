@@ -11,10 +11,10 @@ namespace AppBundle\Structs;
 
 class Configuration
 {
-    const serverUrl = "https://3a460c00.ngrok.io";
-    const projectFolder = "chatbot-master";
-//    const serverUrl = "http://139.59.6.58";
-//    const projectFolder = "chatBotServerSideSymfony";
+//    const serverUrl = "https://3a460c00.ngrok.io";
+//    const projectFolder = "chatbot-master";
+    const serverUrl = "http://139.59.6.58";
+    const projectFolder = "chatBotServerSideSymfony";
     const findSearchApiUrl = Configuration::serverUrl."/".Configuration::projectFolder."/web/app_dev.php/api?asin=";
     const trackProductApiUrl = Configuration::serverUrl."/".Configuration::projectFolder."/web/app_dev.php/api/track?asin=";
     const removeTrackedProductApiUrl = Configuration::serverUrl."/".Configuration::projectFolder."/web/app_dev.php/api/removeTrackedProduct?asin=";
@@ -24,7 +24,7 @@ class Configuration
     const keepaAccessToken = "bmccnl2m5292v3soegcl3abtfe8cd8dbbpg1r7oddnuirodk9h2imk8djkbht4lk";
     const fbAccessToken = "EAAEZChN9WqTYBALwFF6VLYSoqbYB45TzVjMm4TNk8ArI9sgdeqlrckWKTZBtdRipxZCy0gLTiGZCo1mowZCDehmD3rRBbcwSivHJvvxEzfspRVnXQFccpnqLevUbjdOMBYPlZCI44ZCXNLh6ukTJ5YuVz5TfDxmi5PS9sosCGumTZA6lIoBTEjq0";
 
-    const published = false;
+    const published = true;
 
     const asin ="B0719925K5";
     const userID = "1699750453417285";
