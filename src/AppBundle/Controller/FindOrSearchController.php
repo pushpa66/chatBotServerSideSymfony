@@ -18,20 +18,30 @@ class FindOrSearchController extends Controller
      */
     public function getProductDetailsByASIN(Request $request)
     {
+//
+//        $asin = "Car";
+//        $userID = Configuration::userID;
+//        $userFirstName = Configuration::userFirstName;
 
         $asin = $request->get('asin');
         $userID = $request->get('id');
         $userFirstName = $request->get('userFirstName');
+        $startIndex = $request->get('index');
+
+        if(!$startIndex) {
+            $startIndex = 0;
+        }
+
+
 
 //        $message = array();
 //        $message['messages'] = array();
 //        $message['messages'][] = array('text' => 'Asin '.$userFirstName);
 //        return new JsonResponse($message);
 
-        $trackProductApiUrl = Configuration::trackProductApiUrl;
 
-        $asinLength = strlen($asin);
-        if ($asinLength != 10) {
+        $asinCheck = $this->checkASIN($asin);
+        if(!$asinCheck) {
             $curl = curl_init();
 
             curl_setopt_array($curl, array(
@@ -67,40 +77,53 @@ class FindOrSearchController extends Controller
                 if ($productCount == 0) {
                     $message = array();
                     $message['messages'] = array();
-                    $message['messages'][] = array('text' => 'No products are found!!');
+                    $message['messages'][] = array('text' => 'No products are found for \''.$asin.'.\'');
                     return new JsonResponse($message);
                 } else {
                     $jsonList = array();
                     $jsonList['messages'] = array();
-                    $jsonList['messages'][0] = array('text' => $productCount . ' products are found!!');
-                    $jsonList['messages'][1]['attachment'] = array("type" => "template");
-//                    $jsonList['messages'][1]['attachment']['payload'] = array("template_type" => "list", "top_element_style" => "compact", 'elements' => array());
-                    $jsonList['messages'][1]['attachment']['payload'] = array("template_type" => "generic", 'elements' => array());
 
-                    if ($productCount < 3) {
-                        $maxIndex = $productCount;
+                    $index = $startIndex;
+                    $maxIndex = $startIndex + 4;
+
+                    if($startIndex == 0){
+                        $jsonList['messages'][0] = array('text' => $productCount . ' products are found for \''.$asin.'\'. Please select one of the products or try another search.');
+
                     } else {
-                        $maxIndex = 3;
+                        $jsonList['messages'][0] = array('text' => 'Another '.($productCount-$startIndex).' products remain.');
                     }
-//                    $maxIndex = $productCount;
-                    for ($index = 0; $index < $maxIndex; $index++) {
+                     $jsonList['messages'][1]['attachment'] = array("type" => "template");
+//                    $jsonList['messages'][1]['attachment']['payload'] = array("template_type" => "list", "top_element_style" => "compact", 'elements' => array());
+                    $jsonList['messages'][1]['attachment']['payload'] = array("template_type" => "generic","image_aspect_ratio" => "square", 'elements' => array());
 
-                        $productTitle = $response['products'][$index]['title'];
-                        $asinOfProduct = $response['products'][$index]['asin'];
+
+                    if ($productCount < $maxIndex) {
+                        $maxIndex = $productCount;
+                    }
+
+                    for ($i = 0; $i < ($maxIndex - $startIndex); $i++) {
+
+                        $productTitle = $response['products'][$index + $i]['title'];
+                        $asinOfProduct = $response['products'][$index + $i]['asin'];
                         $url = "https://www.amazon.com/dp/$asinOfProduct";
-                        $csvCount = sizeof($response['products'][$index]['csv'][1]);
-                        $priceTemp = $response['products'][$index]['csv'][1][$csvCount - 1];
+                        $csvCount = sizeof($response['products'][$index + $i]['csv'][1]);
+                        $priceTemp = $response['products'][$index + $i]['csv'][1][$csvCount - 1];
                         if ($priceTemp == -1) {
                             $price = 'not given';
                         } else {
                             $price = floatval($priceTemp) / 100;
                         }
 
-                        $imagesArray = preg_split("/,/", $response['products'][$index]['imagesCSV']);
+                        $imagesArray = preg_split("/,/", $response['products'][$index + $i]['imagesCSV']);
 
-                        $jsonList['messages'][1]['attachment']['payload']['elements'][$index] = array('title' => '' . $productTitle, 'image_url' => "https://images-na.ssl-images-amazon.com/images/I/$imagesArray[0]", 'subtitle' => '$ ' . $price, 'buttons' => array());
-                        $jsonList['messages'][1]['attachment']['payload']['elements'][$index]['buttons'][0] = array('type' => 'web_url', 'url' => '' . $url, 'title' => 'View');
-                        $jsonList['messages'][1]['attachment']['payload']['elements'][$index]['buttons'][1] = array('type' => 'json_plugin_url', 'url' => '' . $trackProductApiUrl.$asinOfProduct.'&id='.$userID.'&userFirstName='.$userFirstName, 'title' => 'Track');
+                        $jsonList['messages'][1]['attachment']['payload']['elements'][$i] = array('title' => '' . $productTitle, 'image_url' => "https://images-na.ssl-images-amazon.com/images/I/$imagesArray[0]", 'subtitle' => '$ ' . $price, 'buttons' => array());
+                        $jsonList['messages'][1]['attachment']['payload']['elements'][$i]['buttons'][0] = array('type' => 'web_url', 'url' => '' . $url, 'title' => 'View');
+                        $jsonList['messages'][1]['attachment']['payload']['elements'][$i]['buttons'][1] = array('type' => 'json_plugin_url', 'url' =>  Configuration::trackProductApiUrl.$asinOfProduct.'&id='.$userID.'&userFirstName='.$userFirstName, 'title' => 'Track');
+                    }
+
+                    if ($maxIndex != $productCount){
+                        $jsonList['messages'][1]['attachment']['payload']['elements'][$maxIndex - $startIndex - 1]['buttons'][2] = array('type' => 'json_plugin_url', 'url' =>  Configuration::findSearchApiUrl.$asin.'&id='.$userID.'&userFirstName='.$userFirstName.'&index='.$maxIndex, 'title' => 'Next');
+
                     }
 
                     return new JsonResponse($jsonList);
@@ -137,36 +160,66 @@ class FindOrSearchController extends Controller
             } else {
                 $response = json_decode($response, true);
 
-                $message = array();
-                $message['messages'] = $response['products'][0];
+                if ($response['products'][0]){
+//                    $message = array();
+//                    $message['messages'] = $response['products'][0];
 
-                $productTitle = $response['products'][0]['title'];
-                $url = "https://www.amazon.com/dp/$asin";
+                    $productTitle = $response['products'][0]['title'];
+                    $url = "https://www.amazon.com/dp/$asin";
 
 
-                $csvCount = sizeof($response['products'][0]['csv'][1]);
-                $priceTemp = $response['products'][0]['csv'][1][$csvCount - 1];
-                if ($priceTemp == -1) {
-                    $price = 'not given';
+                    $csvCount = sizeof($response['products'][0]['csv'][1]);
+                    $priceTemp = $response['products'][0]['csv'][1][$csvCount - 1];
+                    if ($priceTemp == -1) {
+                        $price = 'not given';
+                    } else {
+                        $price = floatval($priceTemp) / 100;
+                    }
+
+                    $imagesArray = preg_split("/,/", $response['products'][0]['imagesCSV']);
+
+                    $jsonList = array();
+                    $jsonList['messages'] = array();
+                    $jsonList['messages'] = array();
+                    $jsonList['messages'][0] = array('text' => 'This is the product for ASIN : \''.$asin.'.\'');
+                    $jsonList['messages'][1]['attachment'] = array("type" => "template");
+
+//                    $jsonList['messages'][1]['attachment']['payload'] = array("template_type" => "list", "top_element_style" => "compact", 'elements' => array());
+
+                    $jsonList['messages'][1]['attachment']['payload'] = array("template_type" => "generic","image_aspect_ratio" => "square", 'elements' => array());
+                    $jsonList['messages'][1]['attachment']['payload']['elements'][0] = array('title' => $productTitle, 'image_url' => "https://images-na.ssl-images-amazon.com/images/I/$imagesArray[0]", 'subtitle' => '$ ' . $price, 'buttons' => array());
+                    $jsonList['messages'][1]['attachment']['payload']['elements'][0]['buttons'][0] = array('type' => 'web_url', 'url' => $url, 'title' => 'View');
+                    $jsonList['messages'][1]['attachment']['payload']['elements'][0]['buttons'][1] = array('type' => 'json_plugin_url', 'url' => Configuration::trackProductApiUrl.$asin.'&id='.$userID.'&userFirstName='.$userFirstName, 'title' => 'Track');
+                    return new JsonResponse($jsonList);
+
                 } else {
-                    $price = floatval($priceTemp) / 100;
+                    $message = array();
+                    $message['messages'] = array();
+                    $message['messages'][] = array('text' => 'No products are found for ASIN : \''.$asin.'.\'');
+                    return new JsonResponse($message);
                 }
 
-                $imagesArray = preg_split("/,/", $response['products'][0]['imagesCSV']);
-//=========================================================================
-                $jsonList = array();
-                $jsonList['messages'] = array();
-                $jsonList['messages'][0]['attachment'] = array("type" => "template");
-                $jsonList['messages'][0]['attachment']['payload'] = array("template_type" => "generic", 'elements' => array());
-//                $jsonList['messages'][0]['attachment']['payload'] = array("template_type" => "list", "top_element_style" => "compact", 'elements' => array());
-                $jsonList['messages'][0]['attachment']['payload']['elements'][0] = array('title' => '' . $productTitle, 'image_url' => "https://images-na.ssl-images-amazon.com/images/I/$imagesArray[0]", 'subtitle' => '$ ' . $price, 'buttons' => array());
-                $jsonList['messages'][0]['attachment']['payload']['elements'][0]['buttons'][0] = array('type' => 'web_url', 'url' => '' . $url, 'title' => 'View');
-                $jsonList['messages'][0]['attachment']['payload']['elements'][0]['buttons'][1] = array('type' => 'json_plugin_url', 'url' => '' . $trackProductApiUrl.$asin.'&id='.$userID.'&userFirstName='.$userFirstName, 'title' => 'Track');
-                return new JsonResponse($jsonList);
+
 //            return new JsonResponse($message);
             }
         }
         return new JsonResponse('{}');
     }
 
+    public function checkASIN($input){
+        $maxIndex = strlen($input);
+
+        if($maxIndex == 10){
+            for ($i = 0; $i < $maxIndex; $i++) {
+                if (!ctype_upper($input[$i])) {
+                    if (!is_numeric($input[$i])){
+                        return false;
+                    }
+                }
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

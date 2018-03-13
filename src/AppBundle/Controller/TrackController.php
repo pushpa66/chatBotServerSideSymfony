@@ -32,6 +32,11 @@ class TrackController extends Controller
         $userID = $request->get('id');
         $userFirstName = $request->get('userFirstName');
 
+//        $message = array();
+//        $message['messages'] = array();
+//        $message['messages'][] = array('text'=>'You have already tracked this product with ASIN : \''.$userID.'\'');
+//        return new JsonResponse($message);
+
         $checkUser = $this->getDoctrine()
             ->getRepository(User::class)
             ->findOneBy(
@@ -76,12 +81,12 @@ class TrackController extends Controller
 
             $message = array();
             $message['messages'] = array();
-            $message['messages'][] = array('text'=>$userFirstName.', your product is tracked successfully');
+            $message['messages'][] = array('text'=>$userFirstName.', your product with ASIN : \''.$productASIN.'\' is tracked successfully');
             return new JsonResponse($message);
         } else {
             $message = array();
             $message['messages'] = array();
-            $message['messages'][] = array('text'=>'You have already tracked this product!');
+            $message['messages'][] = array('text'=>'You have already tracked this product with ASIN : \''.$productASIN.'\'');
             return new JsonResponse($message);
         }
     }
@@ -123,10 +128,11 @@ class TrackController extends Controller
             }
 
             $this->remove($productASIN);
+
         }
         $message = array();
         $message['messages'] = array();
-        $message['messages'][0] = array("text" => "Product is removed successfully!");
+        $message['messages'][0] = array("text" => "Product with ASIN ".$productASIN." is removed successfully!");
         return new JsonResponse($message);
     }
 

@@ -11,10 +11,11 @@ namespace AppBundle\Structs;
 
 class Configuration
 {
-//    const serverUrl = "https://e58188dc.ngrok.io";
-//    const projectFolder = "chatbot-master";
-    const serverUrl = "http://139.59.6.58";
-    const projectFolder = "chatBotServerSideSymfony";
+    const serverUrl = "https://3a460c00.ngrok.io";
+    const projectFolder = "chatbot-master";
+//    const serverUrl = "http://139.59.6.58";
+//    const projectFolder = "chatBotServerSideSymfony";
+    const findSearchApiUrl = Configuration::serverUrl."/".Configuration::projectFolder."/web/app_dev.php/api?asin=";
     const trackProductApiUrl = Configuration::serverUrl."/".Configuration::projectFolder."/web/app_dev.php/api/track?asin=";
     const removeTrackedProductApiUrl = Configuration::serverUrl."/".Configuration::projectFolder."/web/app_dev.php/api/removeTrackedProduct?asin=";
     const botID = "5a968c95e4b05207f7628608";
@@ -26,9 +27,15 @@ class Configuration
     const published = false;
 
     const asin ="B0719925K5";
+    const userID = "1699750453417285";
+    const userFirstName = "Pushpa";
     const title = "GearWrench 82108 7 Piece Standard Pliers Master set";
     const image = "51JztTAjkTL.jpg";
     const price = "5.75";
     const trackingNotificationCause = '4';
+
+    const chatfuel1 = "http://139.59.6.58/chatBotServerSideSymfony/web/app_dev.php/api/sendNotifications?id={{messenger user id}}&userFirstName={{first name}}";
+    const chatfuel2 = "http://139.59.6.58/chatBotServerSideSymfony/web/app_dev.php/api?asin={{last user freeform input}}&id={{messenger user id}}&userFirstName={{first name}}";
+
 
 }
