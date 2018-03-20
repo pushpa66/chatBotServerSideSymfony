@@ -10,5 +10,5 @@ parameters:
 
 # app/config/services.yml
 services:
-    app.notifications_controller:
+    app.notification_controller:
         class:     AppBundle\Controller\NotificationController

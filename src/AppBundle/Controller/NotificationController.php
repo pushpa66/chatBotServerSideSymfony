@@ -10,6 +10,7 @@ namespace AppBundle\Controller;
 
 
 use AppBundle\Entity\Notification;
+use AppBundle\Repository\UserProductRepository;
 use AppBundle\Structs\Configuration;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -97,7 +98,9 @@ class NotificationController extends Controller
                 }
             }
         }
-        return new JsonResponse("");
+
+        $response = array('status' => 'Ok');
+        return new JsonResponse($response);
     }
 
     public function getNotificationsFromKeepa(){
@@ -124,12 +127,13 @@ class NotificationController extends Controller
 
         curl_close($curl);
 
+        $priceChangedASINs = array();
+
         if ($err) {
             echo "cURL Error #:" . $err;
         } else {
             $response = json_decode($response, true);
             $numberOfNotifications = sizeof($response['notifications']);
-            $priceChangedASINs = array();
 
             if($numberOfNotifications != 0){
 
@@ -156,20 +160,19 @@ class NotificationController extends Controller
                     }
 
                 }
+            } else {
+                if(!Configuration::published){
+                    $priceChangedASINs[0] = array(
+                        'asin' => Configuration::asin,
+                        'title' => Configuration::title,
+                        'image' => Configuration::image,
+                        'price' => Configuration::price,
+                        'trackingNotificationCause' => Configuration::trackingNotificationCause
+                    );
+                }
             }
-
-            if(!Configuration::published){
-                $priceChangedASINs[0] = array(
-                    'asin' => Configuration::asin,
-                    'title' => Configuration::title,
-                    'image' => Configuration::image,
-                    'price' => Configuration::price,
-                    'trackingNotificationCause' => Configuration::trackingNotificationCause
-                );
-            }
-
-            return $priceChangedASINs;
         }
+        return $priceChangedASINs;
     }
 
     public function setTrackNotificationCause($number){
@@ -291,5 +294,4 @@ class NotificationController extends Controller
 
         return new JsonResponse($jsonList);
     }
-
 }

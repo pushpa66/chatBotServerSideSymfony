@@ -40,6 +40,7 @@ class FindOrSearchController extends Controller
 //        return new JsonResponse($message);
 
 
+        $asin = str_replace(" ","-",$asin);
         $asinCheck = $this->checkASIN($asin);
         if(!$asinCheck) {
             $curl = curl_init();
