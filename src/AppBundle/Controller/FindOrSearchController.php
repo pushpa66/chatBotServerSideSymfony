@@ -39,7 +39,7 @@ class FindOrSearchController extends Controller
 //        $message['messages'][] = array('text' => 'Asin '.$userFirstName);
 //        return new JsonResponse($message);
 
-
+        $readAsin = $asin;
         $asin = str_replace(" ","-",$asin);
         $asinCheck = $this->checkASIN($asin);
         if(!$asinCheck) {
@@ -78,17 +78,17 @@ class FindOrSearchController extends Controller
                 if ($productCount == 0) {
                     $message = array();
                     $message['messages'] = array();
-                    $message['messages'][] = array('text' => 'No products are found for \''.$asin.'.\'');
+                    $message['messages'][] = array('text' => 'No products are found for \''.$readAsin.'.\'');
                     return new JsonResponse($message);
                 } else {
                     $jsonList = array();
                     $jsonList['messages'] = array();
 
                     $index = $startIndex;
-                    $maxIndex = $startIndex + 4;
+                    $maxIndex = $startIndex + Configuration::showItemCount;
 
                     if($startIndex == 0){
-                        $jsonList['messages'][0] = array('text' => $productCount . ' products are found for \''.$asin.'\'. Please select one of the products or try another search.');
+                        $jsonList['messages'][0] = array('text' => $productCount . ' products are found for \''.$readAsin.'\'. Please select one of the products or try another search.');
 
                     } else {
                         $jsonList['messages'][0] = array('text' => 'Another '.($productCount-$startIndex).' products remain.');
