@@ -9,6 +9,3 @@ parameters:
 #    #    arguments: ['@another_service_name', 'plain_value', '%parameter_name%']
 
 # app/config/services.yml
-services:
-    app.notification_controller:
-        class:     AppBundle\Controller\NotificationController
