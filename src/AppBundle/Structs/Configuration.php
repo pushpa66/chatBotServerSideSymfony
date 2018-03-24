@@ -11,10 +11,10 @@ namespace AppBundle\Structs;
 
 class Configuration
 {
-    const serverUrl = "https://225d80f9.ngrok.io";
-    const projectFolder = "chatbot-master";
-//    const serverUrl = "http://167.99.58.137";
-//    const projectFolder = "chatBotServerSideSymfony";
+//    const serverUrl = "https://225d80f9.ngrok.io";
+//    const projectFolder = "chatbot-master";
+    const serverUrl = "http://167.99.58.137";
+    const projectFolder = "chatBotServerSideSymfony";
     const findSearchApiUrl = Configuration::serverUrl."/".Configuration::projectFolder."/web/app_dev.php/api?asin=";
     const trackProductApiUrl = Configuration::serverUrl."/".Configuration::projectFolder."/web/app_dev.php/api/track?asin=";
     const removeTrackedProductApiUrl = Configuration::serverUrl."/".Configuration::projectFolder."/web/app_dev.php/api/removeTrackedProduct?asin=";
