@@ -71,8 +71,6 @@ class TrackController extends Controller
                     $entityManager->flush();
                 }
 
-                $this->trackThisASIN($productASIN, $productPrice);
-
                 $entityManager = $this->getDoctrine()->getManager();
                 $userProduct = new UserProduct();
                 $userProduct->setUserID($userID);
@@ -80,11 +78,16 @@ class TrackController extends Controller
                 $entityManager->persist($userProduct);
                 $entityManager->flush();
 
+                $this->trackThisASIN($productASIN, $productPrice);
+
                 $message = array();
                 $message['messages'] = array();
                 $message['messages'][] = array('text'=>$userFirstName.', your product with ASIN : \''.$productASIN.'\' is tracked successfully');
                 return new JsonResponse($message);
             } else {
+
+                $this->trackThisASIN($productASIN, $productPrice);
+
                 $message = array();
                 $message['messages'] = array();
                 $message['messages'][] = array('text'=>'You have already tracked this product with ASIN : \''.$productASIN.'\'');
@@ -192,7 +195,8 @@ class TrackController extends Controller
             "thresholdValues" => $trackingThresholdValue,
             "notifyIf" => $trackingNotifyIf,
             'notificationType' => $notificationType,
-            "individualNotificationInterval" => -1
+//            "individualNotificationInterval" => -1
+            "individualNotificationInterval" => 1
         );
 
 //        return new JsonResponse($trackData);
