@@ -170,6 +170,7 @@ class FindOrSearchController extends Controller
 
 
                     $csvCount = sizeof($response['products'][0]['csv'][1]);
+
                     $priceTemp = $response['products'][0]['csv'][1][$csvCount - 1];
                     if ($priceTemp == -1) {
                         $price = 'not-given';

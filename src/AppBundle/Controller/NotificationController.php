@@ -144,7 +144,14 @@ class NotificationController extends Controller
             if($numberOfNotifications != 0){
 
                 for($i = 0; $i < $numberOfNotifications; $i++){
-                    $priceTemp = $response['notifications'][$i]['currentPrices'][0];
+                    $priceTemp = 0;
+                    for ($k = 0; $k < sizeof($response['notifications'][$i]['currentPrices']); $k++){
+                        $priceTemp = $response['notifications'][$i]['currentPrices'][$k];
+                        if ($priceTemp != -1){
+                            break;
+                        }
+                    }
+
                     if ($priceTemp == -1) {
                         $price = 'not-given';
                     } else {
