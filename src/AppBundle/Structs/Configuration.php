@@ -27,18 +27,7 @@ class Configuration
 
     const showItemCount = 10;
     const published = true;
-
-    const asin ="B01DJXD4HK";
-    const userID = "1699750453417285";
-    const userFirstName = "Pushpa";
-    const title = "GearWrench 82108 7 Piece Standard Pliers Master set";
-    const image = "51JztTAjkTL.jpg";
-    const price = "5.75";
-    const trackingNotificationCause = '4';
-
-    const chatfuel1 = "http://165.227.92.14/chatBotServerSideSymfony/web/app_dev.php/api/sendNotifications?id={{messenger user id}}&userFirstName={{first name}}";
-    const chatfuel2 = "http://165.227.92.14/chatBotServerSideSymfony/web/app_dev.php/api?asin={{last user freeform input}}&id={{messenger user id}}&userFirstName={{first name}}";
-
+    const testNotifications = false;
     //get all tracked asin list
     //https://api.keepa.com/tracking?key=bmccnl2m5292v3soegcl3abtfe8cd8dbbpg1r7oddnuirodk9h2imk8djkbht4lk&type=list&asins-only=1
 }

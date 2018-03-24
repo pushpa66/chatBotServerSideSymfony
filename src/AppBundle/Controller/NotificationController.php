@@ -105,11 +105,16 @@ class NotificationController extends Controller
 
     public function getNotificationsFromKeepa(){
 
+        $value = 0;
+        if (Configuration::testNotifications){
+            $value = 1;
+        }
+
         $curl = curl_init();
         curl_setopt_array($curl, array(
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_URL => "https://api.keepa.com/tracking?key=".Configuration::keepaAccessToken."&type=notification&revise=1",
+            CURLOPT_URL => "https://api.keepa.com/tracking?key=".Configuration::keepaAccessToken."&type=notification&revise=$value",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
@@ -138,11 +143,9 @@ class NotificationController extends Controller
             if($numberOfNotifications != 0){
 
                 for($i = 0; $i < $numberOfNotifications; $i++){
-
-                    $csvCount = sizeof($response['notifications'][$i]['currentPrices'][1]);
-                    $priceTemp = $response['notifications'][$i]['currentPrices'][1][$csvCount - 1];
+                    $priceTemp = $response['notifications'][$i]['currentPrices'][0];
                     if ($priceTemp == -1) {
-                        $price = 'not given';
+                        $price = 'not-given';
                     } else {
                         $price = floatval($priceTemp) / 100;
                     }
@@ -156,19 +159,9 @@ class NotificationController extends Controller
                         );
                     } else {
                         $trackController = new TrackController();
-                        $trackController->trackThisASIN($response['notifications'][$i]['asin']);
+                        $trackController->trackThisASIN($response['notifications'][$i]['asin'], $price);
                     }
 
-                }
-            } else {
-                if(!Configuration::published){
-                    $priceChangedASINs[0] = array(
-                        'asin' => Configuration::asin,
-                        'title' => Configuration::title,
-                        'image' => Configuration::image,
-                        'price' => Configuration::price,
-                        'trackingNotificationCause' => Configuration::trackingNotificationCause
-                    );
                 }
             }
         }
@@ -237,8 +230,6 @@ class NotificationController extends Controller
 
         if ($err) {
             echo "cURL Error #:" . $err;
-        } else {
-            echo $response;
         }
     }
 

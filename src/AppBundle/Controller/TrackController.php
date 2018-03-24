@@ -69,9 +69,9 @@ class TrackController extends Controller
                     $product->setProductASIN($productASIN);
                     $entityManager->persist($product);
                     $entityManager->flush();
-
-                    $this->trackThisASIN($productASIN, $productPrice);
                 }
+
+                $this->trackThisASIN($productASIN, $productPrice);
 
                 $entityManager = $this->getDoctrine()->getManager();
                 $userProduct = new UserProduct();
