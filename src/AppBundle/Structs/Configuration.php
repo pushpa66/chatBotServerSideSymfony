@@ -27,7 +27,7 @@ class Configuration
 
     const showItemCount = 10;
     const published = true;
-    const testNotifications = false;
+    const testNotifications = true;
     //get all tracked asin list
     //https://api.keepa.com/tracking?key=bmccnl2m5292v3soegcl3abtfe8cd8dbbpg1r7oddnuirodk9h2imk8djkbht4lk&type=list&asins-only=1
 }
