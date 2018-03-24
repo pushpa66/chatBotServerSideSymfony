@@ -110,7 +110,7 @@ class FindOrSearchController extends Controller
                         $csvCount = sizeof($response['products'][$index + $i]['csv'][1]);
                         $priceTemp = $response['products'][$index + $i]['csv'][1][$csvCount - 1];
                         if ($priceTemp == -1) {
-                            $price = 'not given';
+                            $price = 'not-given';
                         } else {
                             $price = floatval($priceTemp) / 100;
                         }
@@ -119,7 +119,7 @@ class FindOrSearchController extends Controller
 
                         $jsonList['messages'][1]['attachment']['payload']['elements'][$i] = array('title' => '' . $productTitle, 'image_url' => "https://images-na.ssl-images-amazon.com/images/I/$imagesArray[0]", 'subtitle' => '$ ' . $price, 'buttons' => array());
                         $jsonList['messages'][1]['attachment']['payload']['elements'][$i]['buttons'][0] = array('type' => 'web_url', 'url' => '' . $url, 'title' => 'View');
-                        $jsonList['messages'][1]['attachment']['payload']['elements'][$i]['buttons'][1] = array('type' => 'json_plugin_url', 'url' =>  Configuration::trackProductApiUrl.$asinOfProduct.'&id='.$userID.'&userFirstName='.$userFirstName, 'title' => 'Track');
+                        $jsonList['messages'][1]['attachment']['payload']['elements'][$i]['buttons'][1] = array('type' => 'json_plugin_url', 'url' =>  Configuration::trackProductApiUrl.$asinOfProduct.'&id='.$userID.'&userFirstName='.$userFirstName.'&price='.$price, 'title' => 'Track');
                     }
 
                     if ($maxIndex != $productCount){
@@ -172,7 +172,7 @@ class FindOrSearchController extends Controller
                     $csvCount = sizeof($response['products'][0]['csv'][1]);
                     $priceTemp = $response['products'][0]['csv'][1][$csvCount - 1];
                     if ($priceTemp == -1) {
-                        $price = 'not given';
+                        $price = 'not-given';
                     } else {
                         $price = floatval($priceTemp) / 100;
                     }
@@ -190,7 +190,7 @@ class FindOrSearchController extends Controller
                     $jsonList['messages'][1]['attachment']['payload'] = array("template_type" => "generic","image_aspect_ratio" => "square", 'elements' => array());
                     $jsonList['messages'][1]['attachment']['payload']['elements'][0] = array('title' => $productTitle, 'image_url' => "https://images-na.ssl-images-amazon.com/images/I/$imagesArray[0]", 'subtitle' => '$ ' . $price, 'buttons' => array());
                     $jsonList['messages'][1]['attachment']['payload']['elements'][0]['buttons'][0] = array('type' => 'web_url', 'url' => $url, 'title' => 'View');
-                    $jsonList['messages'][1]['attachment']['payload']['elements'][0]['buttons'][1] = array('type' => 'json_plugin_url', 'url' => Configuration::trackProductApiUrl.$asin.'&id='.$userID.'&userFirstName='.$userFirstName, 'title' => 'Track');
+                    $jsonList['messages'][1]['attachment']['payload']['elements'][0]['buttons'][1] = array('type' => 'json_plugin_url', 'url' => Configuration::trackProductApiUrl.$asin.'&id='.$userID.'&userFirstName='.$userFirstName.'&price='.$price, 'title' => 'Track');
                     return new JsonResponse($jsonList);
 
                 } else {
