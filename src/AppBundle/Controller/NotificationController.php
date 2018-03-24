@@ -33,8 +33,9 @@ class NotificationController extends Controller
         if($result!= null) {
             $arraySize = sizeof($result);
 
-            for ($i = 0; $i < $arraySize; $i++) {
+            $userIDs = array();
 
+            for ($i = 0; $i < $arraySize; $i++) {
                 $productASIN = $result[$i]['asin'];
                 $title = $result[$i]['title'];
                 $image = $result[$i]['image'];
@@ -51,8 +52,6 @@ class NotificationController extends Controller
 
                     // create an entity manager
                     $entityManager = $this->getDoctrine()->getManager();
-
-                    $userIDs = array();
 
                     foreach ($userProducts as $userProduct) {
 
@@ -87,15 +86,17 @@ class NotificationController extends Controller
                     }
                     $entityManager->flush();
 
-                    for ($i = 0; $i < sizeof($userIDs); $i++){
-
-                        $botID = Configuration::botID;
-                        $userID = $userIDs[$i];
-                        $token = Configuration::token;
-                        $blockID = Configuration::blockID;
-                        $this->sendingBlock($botID, $userID, $token, $blockID);
-                    }
                 }
+            }
+
+
+            for ($i = 0; $i < sizeof($userIDs); $i++){
+
+                $botID = Configuration::botID;
+                $userID = $userIDs[$i];
+                $token = Configuration::token;
+                $blockID = Configuration::blockID;
+                $this->sendingBlock($botID, $userID, $token, $blockID);
             }
         }
 
@@ -277,11 +278,13 @@ class NotificationController extends Controller
             $jsonList['messages'][2 * $index + 2]['attachment']['payload']['elements'][0]['buttons'][0] = array('type' => 'web_url', 'url' => $url, 'title' => 'View');
             $jsonList['messages'][2 * $index + 2]['attachment']['payload']['elements'][0]['buttons'][1] = array('type' => 'json_plugin_url', 'url' => $removeTrackedProductApiUrl.$productASIN.'&id='.$userID, 'title' => 'Remove');
 
+        }
+
+        for ($index = 0; $index < $notificationCount; $index++) {
             $entityManager->remove($notifications[$index]);
         }
 
         $entityManager->flush();
-
 
         return new JsonResponse($jsonList);
     }
