@@ -78,7 +78,7 @@ class TrackController extends Controller
                 $entityManager->persist($userProduct);
                 $entityManager->flush();
 
-                $productPrice = $productPrice - $productPrice * 0.05;
+                $productPrice = round($productPrice - $productPrice * 0.05, 2);
 
                 $this->trackThisASIN($productASIN, $productPrice);
 
@@ -88,7 +88,7 @@ class TrackController extends Controller
                 return new JsonResponse($message);
             } else {
 
-                $productPrice = $productPrice - $productPrice * 0.05;
+                $productPrice = round($productPrice - $productPrice * 0.05, 2);
                 $this->trackThisASIN($productASIN, $productPrice);
 
                 $message = array();
