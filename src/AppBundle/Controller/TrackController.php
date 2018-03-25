@@ -78,19 +78,22 @@ class TrackController extends Controller
                 $entityManager->persist($userProduct);
                 $entityManager->flush();
 
+                $productPrice = $productPrice - $productPrice * 0.05;
+
                 $this->trackThisASIN($productASIN, $productPrice);
 
                 $message = array();
                 $message['messages'] = array();
-                $message['messages'][] = array('text'=>$userFirstName.', your product with ASIN : \''.$productASIN.'\' is tracked successfully');
+                $message['messages'][] = array('text'=>$userFirstName.', your product with ASIN : \''.$productASIN.'\' is tracked successfully with 5% price reduction (tracked price $ '.$productPrice);
                 return new JsonResponse($message);
             } else {
 
+                $productPrice = $productPrice - $productPrice * 0.05;
                 $this->trackThisASIN($productASIN, $productPrice);
 
                 $message = array();
                 $message['messages'] = array();
-                $message['messages'][] = array('text'=>'You have already tracked this product with ASIN : \''.$productASIN.'\'');
+                $message['messages'][] = array('text'=>'You have already tracked this product with ASIN : \''.$productASIN.'\'. Update it with price $'.$productPrice);
                 return new JsonResponse($message);
             }
         } else {
@@ -195,8 +198,8 @@ class TrackController extends Controller
             "thresholdValues" => $trackingThresholdValue,
             "notifyIf" => $trackingNotifyIf,
             'notificationType' => $notificationType,
-//            "individualNotificationInterval" => -1
-            "individualNotificationInterval" => 1
+            "individualNotificationInterval" => -1
+//            "individualNotificationInterval" => 1
         );
 
 //        return new JsonResponse($trackData);
