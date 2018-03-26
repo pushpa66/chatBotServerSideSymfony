@@ -168,14 +168,25 @@ class FindOrSearchController extends Controller
                     $productTitle = $response['products'][0]['title'];
                     $url = "https://www.amazon.com/dp/$asin";
 
-
                     $csvCount = sizeof($response['products'][0]['csv'][1]);
-                    $priceTemp = $response['products'][0]['csv'][1][$csvCount - 1];
+                    $priceTemp = 0;
+                    for ($k = 0; $k < $csvCount; $k += 2){
+                        $priceTemp = $response['products'][0]['csv'][1][$csvCount - 1 - $k];
+                        if ($priceTemp != -1){
+                            break;
+                        }
+                    }
+
+//
+//                    $csvCount = sizeof($response['products'][0]['csv'][1]);
+//                    $priceTemp = $response['products'][0]['csv'][1][$csvCount - 1];
+
                     if ($priceTemp == -1) {
                         $price = 'not-given';
                     } else {
                         $price = floatval($priceTemp) / 100;
                     }
+
 
                     $imagesArray = preg_split("/,/", $response['products'][0]['imagesCSV']);
 
