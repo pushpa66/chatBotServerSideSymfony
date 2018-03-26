@@ -80,7 +80,7 @@ class TrackController extends Controller
 
                 $productPrice = round($productPrice - $productPrice * 0.05, 2);
 
-                $this->trackThisASIN($productASIN, $productPrice);
+                $this->trackThisASIN($productASIN, $productPrice * 100);
 
                 $message = array();
                 $message['messages'] = array();
@@ -89,7 +89,7 @@ class TrackController extends Controller
             } else {
 
                 $productPrice = round($productPrice - $productPrice * 0.05, 2);
-                $this->trackThisASIN($productASIN, $productPrice);
+                $this->trackThisASIN($productASIN, $productPrice * 100);
 
                 $message = array();
                 $message['messages'] = array();
