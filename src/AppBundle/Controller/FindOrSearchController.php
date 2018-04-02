@@ -48,9 +48,16 @@ class FindOrSearchController extends Controller
             $check1 = "https://www.amazon.com";
             $check2 = "/dp/";
 
-            if (strpos($asin, $check1) === true) {
-                if (strpos($asin, $check2) === true){
-                    $asin = substr($asin,strpos($asin, $check2) + strlen($check2),strpos($asin, $check2) + strlen($check2) + 10);
+//            var_dump(strpos($asin, $check1));
+//            var_dump(strpos($asin, '-'));
+
+            if (strpos($asin, $check1) !== false) {
+                if (strpos($asin, $check2) !== false){
+
+                    $start = strpos($asin, $check2) + strlen($check2);
+
+                    $asin = substr($asin, $start, 10);
+
                     $asinCheck = true;
                 }
             }
