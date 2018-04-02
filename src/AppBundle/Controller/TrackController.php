@@ -84,7 +84,7 @@ class TrackController extends Controller
 
                 $message = array();
                 $message['messages'] = array();
-                $message['messages'][] = array('text'=>$userFirstName.', your product with ASIN : \''.$productASIN.'\' is tracked successfully with 5% price reduction (tracked price $ '.$productPrice);
+                $message['messages'][] = array('text'=>$userFirstName.', your product with ASIN : \''.$productASIN.'\' is tracked successfully with 5% price reduction (tracked price $ '.$productPrice.')');
                 return new JsonResponse($message);
             } else {
 

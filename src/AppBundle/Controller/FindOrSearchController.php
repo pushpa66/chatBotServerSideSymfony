@@ -42,6 +42,21 @@ class FindOrSearchController extends Controller
         $readAsin = $asin;
         $asin = str_replace(" ","-",$asin);
         $asinCheck = $this->checkASIN($asin);
+
+
+        if (!$asinCheck){
+            $check1 = "https://www.amazon.com";
+            $check2 = "/dp/";
+
+            if (strpos($asin, $check1) === true) {
+                if (strpos($asin, $check2) === true){
+                    $asin = substr($asin,strpos($asin, $check2) + strlen($check2),strpos($asin, $check2) + strlen($check2) + 10);
+                    $asinCheck = true;
+                }
+            }
+        }
+
+
         if(!$asinCheck) {
             $curl = curl_init();
 
