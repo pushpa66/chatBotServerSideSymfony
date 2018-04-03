@@ -41,52 +41,39 @@ class NotificationController extends Controller
                 $image = $result[$i]['image'];
                 $price = $result[$i]['price'];
                 $notifyType = $result[$i]['trackingNotificationCause'];
+                $listName = $result[$i]['trackingListName'];
 
-                $userProducts = $this->getDoctrine()
-                    ->getRepository(UserProduct::class)
-                    ->findBy(
-                        array('productASIN' => $productASIN)
+
+                // create an entity manager
+                $entityManager = $this->getDoctrine()->getManager();
+                $availableNotification = $this->getDoctrine()
+                    ->getRepository(Notification::class)
+                    ->findoneBy(
+                        array('userID' => $listName,'productASIN' => $productASIN)
                     );
-
-                if (sizeof($userProducts) != 0) {
-
-                    // create an entity manager
-                    $entityManager = $this->getDoctrine()->getManager();
-
-                    foreach ($userProducts as $userProduct) {
-
-                        $availableNotification = $this->getDoctrine()
-                            ->getRepository(Notification::class)
-                            ->findoneBy(
-                                array('userID' => $userProduct->getUserID(),'productASIN' => $productASIN)
-                            );
-                        //======================
-                        if(!in_array($userProduct->getUserID(), $userIDs)){
-                            array_push($userIDs, $userProduct->getUserID());
-                        }
-                        //======================
-
-                        if(!$availableNotification){
-                            $notification = new Notification();
-                            $notification->setUserID($userProduct->getUserID());
-                            $notification->setProductASIN($productASIN);
-                            $notification->setTitle($title);
-                            $notification->setImage($image);
-                            $notification->setPrice($price);
-                            $notification->setNotifyType($notifyType);
-                            $entityManager->persist($notification);
-                        } else {
-                            $availableNotification->setUserID($userProduct->getUserID());
-                            $availableNotification->setProductASIN($productASIN);
-                            $availableNotification->setTitle($title);
-                            $availableNotification->setImage($image);
-                            $availableNotification->setPrice($price);
-                            $availableNotification->setNotifyType($notifyType);
-                        }
-                    }
-                    $entityManager->flush();
-
+                if(!in_array($listName, $userIDs)){
+                    array_push($userIDs, $listName);
                 }
+
+                if(!$availableNotification){
+                    $notification = new Notification();
+                    $notification->setUserID($listName);
+                    $notification->setProductASIN($productASIN);
+                    $notification->setTitle($title);
+                    $notification->setImage($image);
+                    $notification->setPrice($price);
+                    $notification->setNotifyType($notifyType);
+                    $entityManager->persist($notification);
+                } else {
+                    $availableNotification->setUserID($listName);
+                    $availableNotification->setProductASIN($productASIN);
+                    $availableNotification->setTitle($title);
+                    $availableNotification->setImage($image);
+                    $availableNotification->setPrice($price);
+                    $availableNotification->setNotifyType($notifyType);
+                }
+
+                $entityManager->flush();
             }
 
 
@@ -157,18 +144,15 @@ class NotificationController extends Controller
                     } else {
                         $price = floatval($priceTemp) / 100;
                     }
-                    if($response['notifications'][$i]['trackingNotificationCause'] != '0'){
-                        $priceChangedASINs[$i] = array(
-                            'asin' => $response['notifications'][$i]['asin'],
-                            'title' => $response['notifications'][$i]['title'],
-                            'image' => $response['notifications'][$i]['image'],
-                            'price' => $price,
-                            'trackingNotificationCause' => $response['notifications'][$i]['trackingNotificationCause']
-                        );
-                    } else {
-                        $trackController = new TrackController();
-                        $trackController->trackThisASIN($response['notifications'][$i]['asin'], $price);
-                    }
+
+                    $priceChangedASINs[$i] = array(
+                        'asin' => $response['notifications'][$i]['asin'],
+                        'title' => $response['notifications'][$i]['title'],
+                        'image' => $response['notifications'][$i]['image'],
+                        'price' => $price,
+                        'trackingNotificationCause' => $response['notifications'][$i]['trackingNotificationCause'],
+                        'trackingListName' => $response['notifications'][$i]['trackingListName']
+                    );
 
                 }
             }

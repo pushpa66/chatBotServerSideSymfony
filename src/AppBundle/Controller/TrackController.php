@@ -102,7 +102,6 @@ class TrackController extends Controller
             $message['messages'][] = array('text'=>'Sorry!! I can not track this product. Price is not available.');
             return new JsonResponse($message);
         }
-
     }
 
     /**
