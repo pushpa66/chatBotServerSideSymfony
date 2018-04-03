@@ -140,7 +140,7 @@ class TrackController extends Controller
                 $entityManager->flush();
             }
 
-            $this->remove($productASIN);
+            $this->remove($userID, $productASIN);
 
         }
         $message = array();
@@ -223,6 +223,9 @@ class TrackController extends Controller
         ));
 
         $response = curl_exec($curl);
+
+//        var_dump($response);
+
         $err = curl_error($curl);
 
         curl_close($curl);
@@ -233,14 +236,14 @@ class TrackController extends Controller
 
     }
 
-    public function remove($productASIN){
+    public function remove($listName, $productASIN){
 
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_URL => "https://api.keepa.com/tracking?key=".Configuration::keepaAccessToken."&type=remove&asin=$productASIN",
+            CURLOPT_URL => "https://api.keepa.com/tracking?key=".Configuration::keepaAccessToken."&type=remove&asin=$productASIN&list=$listName",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
@@ -266,14 +269,14 @@ class TrackController extends Controller
         }
     }
 
-    public function removeAll(){
+    public function removeAll($listName){
 
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_URL => "https://api.keepa.com/tracking?key=".Configuration::keepaAccessToken."&type=removeAll",
+            CURLOPT_URL => "https://api.keepa.com/tracking?key=".Configuration::keepaAccessToken."&type=removeAll&list=$listName",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
@@ -299,95 +302,4 @@ class TrackController extends Controller
         }
     }
 
-    /**
-     * @Route("/api/trackThisASIN", name="trackThisASIN")
-     */
-    public function testTrackThisASIN(Request $request){
-        $productASIN = $request->get('asin');
-        $productPrice = $request->get('price');
-
-        $notificationType = array();
-        $notificationType[0] = false;
-        $notificationType[1] = false;
-        $notificationType[2] = false;
-        $notificationType[3] = false;
-        $notificationType[4] = false;
-        $notificationType[5] = true;
-        $notificationType[6] = false;
-        $notificationType[7] = false;
-
-        $trackingThresholdValue = array();
-
-        $trackingThresholdValue[0] = array(
-            "thresholdValue" => $productPrice,
-            "domain" =>  1,
-            "csvType" => 1,
-            "isDrop" => true
-        );
-        $trackingThresholdValue[1] = array(
-            "thresholdValue" => $productPrice,
-            "domain" =>  1,
-            "csvType" => 1,
-            "isDrop" => false
-        );
-
-        $trackingNotifyIf = array();
-        $trackingNotifyIf[0] = array(
-            "domain" => 1,
-            "csvType" => 1,
-            "notifyIfType" => 0,
-        );
-        $trackingNotifyIf[1] = array(
-            "domain" => 1,
-            "csvType" => 1,
-            "notifyIfType" => 1,
-        );
-
-        $trackData = array(
-            "asin" => $productASIN,
-            "ttl" => 0,
-            "expireNotify" => true,
-            "desiredPricesInMainCurrency" => true,
-            "mainDomainId" => 1,
-            "updateInterval" => 1,
-            "thresholdValues" => $trackingThresholdValue,
-            "notifyIf" => $trackingNotifyIf,
-            'notificationType' => $notificationType,
-            "individualNotificationInterval" => -1
-        );
-
-//        return new JsonResponse($trackData);
-
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_URL => "https://api.keepa.com/tracking?key=".Configuration::keepaAccessToken."&type=add",
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "POST",
-            CURLOPT_POSTFIELDS => json_encode($trackData),
-            CURLOPT_HTTPHEADER => array(
-                "cache-control: no-cache",
-                "content-type: application/json",
-                "postman-token: 3926067a-03ee-f119-ae37-d7b674ce0507"
-            ),
-        ));
-
-        $response = curl_exec($curl);
-        $err = curl_error($curl);
-
-        curl_close($curl);
-
-        if ($err) {
-            echo "cURL Error #:" . $err;
-        } else {
-            return new JsonResponse(json_decode($response));
-        }
-
-        return new JsonResponse("{}");
-    }
 }
