@@ -80,7 +80,7 @@ class TrackController extends Controller
 
                 $productPrice = round($productPrice - $productPrice * 0.05, 2);
 
-                $this->trackThisASIN($productASIN, $productPrice * 100);
+                $this->trackThisASIN($productASIN, $userID, $productPrice * 100);
 
                 $message = array();
                 $message['messages'] = array();
@@ -89,7 +89,7 @@ class TrackController extends Controller
             } else {
 
                 $productPrice = round($productPrice - $productPrice * 0.05, 2);
-                $this->trackThisASIN($productASIN, $productPrice * 100);
+                $this->trackThisASIN($productASIN, $userID, $productPrice * 100);
 
                 $message = array();
                 $message['messages'] = array();
@@ -150,7 +150,7 @@ class TrackController extends Controller
         return new JsonResponse($message);
     }
 
-    public function trackThisASIN($productASIN, $productPrice){
+    public function trackThisASIN($productASIN, $listName, $productPrice){
         $notificationType = array();
         $notificationType[0] = false;
         $notificationType[1] = false;
@@ -208,7 +208,7 @@ class TrackController extends Controller
         curl_setopt_array($curl, array(
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_URL => "https://api.keepa.com/tracking?key=".Configuration::keepaAccessToken."&type=add",
+            CURLOPT_URL => "https://api.keepa.com/tracking?key=".Configuration::keepaAccessToken."&type=add&list=$listName",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
