@@ -47,14 +47,20 @@ class FindOrSearchController extends Controller
         if (!$asinCheck){
             $check1 = "https://www.amazon.com";
             $check2 = "/dp/";
+            $check3 = "/product/";
 
-//            var_dump(strpos($asin, $check1));
-//            var_dump(strpos($asin, '-'));
+            // we can only get integers and false. So you must use !== false logic
 
             if (strpos($asin, $check1) !== false) {
                 if (strpos($asin, $check2) !== false){
 
                     $start = strpos($asin, $check2) + strlen($check2);
+
+                    $asin = substr($asin, $start, 10);
+
+                    $asinCheck = true;
+                } elseif (strpos($asin, $check3) !== false){
+                    $start = strpos($asin, $check3) + strlen($check3);
 
                     $asin = substr($asin, $start, 10);
 
