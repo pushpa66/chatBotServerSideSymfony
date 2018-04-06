@@ -109,6 +109,8 @@ class TrackController extends Controller
                 return new JsonResponse($message);
             } else {
 
+                $this->remove($userID, $productASIN);
+
                 $productPrice = round($productPrice - $productPrice * $percentage / 100, 2);
                 $this->trackThisASIN($productASIN, $userID, $productPrice * 100);
 
