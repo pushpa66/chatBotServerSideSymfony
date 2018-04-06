@@ -32,15 +32,19 @@ class TrackController extends Controller
         $userID = $request->get('id');
         $userFirstName = $request->get('userFirstName');
 
+        $price1 = round($productPrice - $productPrice * 5 / 100, 2);
+        $price2 = round($productPrice - $productPrice * 10 / 100, 2);
+        $price3 = round($productPrice - $productPrice * 15 / 100, 2);
+
         $jsonButtonsMessage = array();
         $jsonButtonsMessage['messages'] = array();
         $jsonButtonsMessage['messages'][0]['attachment'] = array("type" => "template");
 
         $text = "Tracking criteria for ASIN : $productASIN.";
         $buttons = array();
-        $buttons[0] = array('type' => 'json_plugin_url', 'url' => Configuration::trackProductApiUrl.$productASIN.'&id='.$userID.'&userFirstName='.$userFirstName.'&price='.$productPrice.'&percentage=5', 'title' => '5%');
-        $buttons[1] = array('type' => 'json_plugin_url', 'url' => Configuration::trackProductApiUrl.$productASIN.'&id='.$userID.'&userFirstName='.$userFirstName.'&price='.$productPrice.'&percentage=10', 'title' => '10%');
-        $buttons[2] = array('type' => 'json_plugin_url', 'url' => Configuration::trackProductApiUrl.$productASIN.'&id='.$userID.'&userFirstName='.$userFirstName.'&price='.$productPrice.'&percentage=15', 'title' => '15%');
+        $buttons[0] = array('type' => 'json_plugin_url', 'url' => Configuration::trackProductApiUrl.$productASIN.'&id='.$userID.'&userFirstName='.$userFirstName.'&price='.$productPrice.'&percentage=5', 'title' => '5% -> $ '.$price1);
+        $buttons[1] = array('type' => 'json_plugin_url', 'url' => Configuration::trackProductApiUrl.$productASIN.'&id='.$userID.'&userFirstName='.$userFirstName.'&price='.$productPrice.'&percentage=10', 'title' => '10% -> $ '.$price2);
+        $buttons[2] = array('type' => 'json_plugin_url', 'url' => Configuration::trackProductApiUrl.$productASIN.'&id='.$userID.'&userFirstName='.$userFirstName.'&price='.$productPrice.'&percentage=15', 'title' => '15% -> $ '.$price3);
 
         $jsonButtonsMessage['messages'][0]['attachment']['payload'] = array("template_type" => "button", "text" => $text, "buttons" => $buttons);
 
