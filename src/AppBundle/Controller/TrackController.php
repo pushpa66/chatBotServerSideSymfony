@@ -42,9 +42,9 @@ class TrackController extends Controller
 
         $text = "Tracking criteria for ASIN : $productASIN.";
         $buttons = array();
-        $buttons[0] = array('type' => 'json_plugin_url', 'url' => Configuration::trackProductApiUrl.$productASIN.'&id='.$userID.'&userFirstName='.$userFirstName.'&price='.$productPrice.'&percentage=5', 'title' => '5% ('.$price1.')');
-        $buttons[1] = array('type' => 'json_plugin_url', 'url' => Configuration::trackProductApiUrl.$productASIN.'&id='.$userID.'&userFirstName='.$userFirstName.'&price='.$productPrice.'&percentage=10', 'title' => '10% ('.$price2.')');
-        $buttons[2] = array('type' => 'json_plugin_url', 'url' => Configuration::trackProductApiUrl.$productASIN.'&id='.$userID.'&userFirstName='.$userFirstName.'&price='.$productPrice.'&percentage=15', 'title' => '15% ('.$price3.')');
+        $buttons[0] = array('type' => 'json_plugin_url', 'url' => Configuration::trackProductApiUrl.$productASIN.'&id='.$userID.'&userFirstName='.$userFirstName.'&price='.$productPrice.'&percentage=5', 'title' => '5% ($ '.$price1.')');
+        $buttons[1] = array('type' => 'json_plugin_url', 'url' => Configuration::trackProductApiUrl.$productASIN.'&id='.$userID.'&userFirstName='.$userFirstName.'&price='.$productPrice.'&percentage=10', 'title' => '10% ($ '.$price2.')');
+        $buttons[2] = array('type' => 'json_plugin_url', 'url' => Configuration::trackProductApiUrl.$productASIN.'&id='.$userID.'&userFirstName='.$userFirstName.'&price='.$productPrice.'&percentage=15', 'title' => '15% ($ '.$price3.')');
 
         $jsonButtonsMessage['messages'][0]['attachment']['payload'] = array("template_type" => "button", "text" => $text, "buttons" => $buttons);
 
