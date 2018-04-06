@@ -107,7 +107,7 @@ class TrackController extends Controller
 
                 $message = array();
                 $message['messages'] = array();
-                $message['messages'][] = array('text'=>$userFirstName.', your product with ASIN : \''.$productASIN.'\' is tracked successfully with '.$percentage.'% price reduction (tracked price $ '.$productPrice.')');
+                $message['messages'][] = array('text'=>$userFirstName.', your product with ASIN : \''.$productASIN.'\' is tracked successfully with '.$percentage.'% price reduction.');
                 return new JsonResponse($message);
             } else {
 
@@ -116,7 +116,7 @@ class TrackController extends Controller
 
                 $message = array();
                 $message['messages'] = array();
-                $message['messages'][] = array('text'=>'You have already tracked this product with ASIN : \''.$productASIN.'\'. Update it with '.$percentage.'% price reduction (tracked price $'.$productPrice.')');
+                $message['messages'][] = array('text'=>'You have already tracked this product with ASIN : \''.$productASIN.'\'. Update it with '.$percentage.'% price reduction.');
                 return new JsonResponse($message);
             }
         } else {
