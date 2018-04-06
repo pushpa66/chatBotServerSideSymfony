@@ -114,7 +114,7 @@ class TrackController extends Controller
 
                 $message = array();
                 $message['messages'] = array();
-                $message['messages'][] = array('text'=>'You have already tracked this product with ASIN : \''.$productASIN.'\'. Update it with price $'.$productPrice);
+                $message['messages'][] = array('text'=>'You have already tracked this product with ASIN : \''.$productASIN.'\'. Update it with '.$percentage.'% price reduction (tracked price $'.$productPrice.')');
                 return new JsonResponse($message);
             }
         } else {
