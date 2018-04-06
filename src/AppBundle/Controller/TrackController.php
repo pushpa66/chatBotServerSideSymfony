@@ -99,9 +99,7 @@ class TrackController extends Controller
                 $entityManager->persist($userProduct);
                 $entityManager->flush();
 
-                $productPrice = round($productPrice - $productPrice * $percentage / 100, 2);
-
-                $this->trackThisASIN($productASIN, $userID, $productPrice * 100);
+                $this->trackThisASIN($productASIN, $userID, $productPrice, $percentage);
 
                 $message = array();
                 $message['messages'] = array();
@@ -110,9 +108,7 @@ class TrackController extends Controller
             } else {
 
                 $this->remove($userID, $productASIN);
-
-                $productPrice = round($productPrice - $productPrice * $percentage / 100, 2);
-                $this->trackThisASIN($productASIN, $userID, $productPrice * 100);
+                $this->trackThisASIN($productASIN, $userID, $productPrice, $percentage);
 
                 $message = array();
                 $message['messages'] = array();
@@ -172,7 +168,12 @@ class TrackController extends Controller
         return new JsonResponse($message);
     }
 
-    public function trackThisASIN($productASIN, $listName, $productPrice){
+    public function trackThisASIN($productASIN, $listName, $productPrice , $percentage){
+
+        $productPriceLower = round($productPrice - $productPrice * $percentage / 100, 2) * 100;
+//        $productPriceUpper = round($productPrice + $productPrice * $percentage / 100, 2) * 100;
+        $productPriceUpper = round($productPrice + $productPrice / 100, 2) * 100;
+
         $notificationType = array();
         $notificationType[0] = false;
         $notificationType[1] = false;
@@ -186,13 +187,13 @@ class TrackController extends Controller
         $trackingThresholdValue = array();
 
         $trackingThresholdValue[0] = array(
-            "thresholdValue" => $productPrice,
+            "thresholdValue" => $productPriceLower,
             "domain" =>  1,
             "csvType" => 1,
             "isDrop" => true
         );
         $trackingThresholdValue[1] = array(
-            "thresholdValue" => $productPrice,
+            "thresholdValue" => $productPriceUpper,
             "domain" =>  1,
             "csvType" => 1,
             "isDrop" => false
