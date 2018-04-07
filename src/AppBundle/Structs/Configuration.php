@@ -13,8 +13,8 @@ class Configuration
 {
     const showItemCount = 10;
     const published = true;
-//    const testNotifications = false;
-    const testNotifications = true;
+    const testNotifications = false;
+//    const testNotifications = true;
 
 
 //    const serverUrl = "https://68ab7aa5.ngrok.io";
