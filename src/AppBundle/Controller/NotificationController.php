@@ -63,34 +63,36 @@ class NotificationController extends Controller
             echo "cURL Error #:" . $err;
         } else {
             $response = json_decode($response, true);
-            $numberOfNotifications = sizeof($response['notifications']);
+            if (array_key_exists('notifications', $response)) {
+                $numberOfNotifications = sizeof($response['notifications']);
 
-            if($numberOfNotifications != 0){
+                if($numberOfNotifications != 0){
 
-                for($i = 0; $i < $numberOfNotifications; $i++){
-                    $priceTemp = 0;
-                    for ($k = 0; $k < sizeof($response['notifications'][$i]['currentPrices']); $k++){
-                        $priceTemp = $response['notifications'][$i]['currentPrices'][$k];
-                        if ($priceTemp != -1){
-                            break;
+                    for($i = 0; $i < $numberOfNotifications; $i++){
+                        $priceTemp = 0;
+                        for ($k = 0; $k < sizeof($response['notifications'][$i]['currentPrices']); $k++){
+                            $priceTemp = $response['notifications'][$i]['currentPrices'][$k];
+                            if ($priceTemp != -1){
+                                break;
+                            }
                         }
+
+                        if ($priceTemp == -1) {
+                            $price = 'not-given';
+                        } else {
+                            $price = floatval($priceTemp) / 100;
+                        }
+
+                        $priceChangedASINs[$i] = array(
+                            'asin' => $response['notifications'][$i]['asin'],
+                            'title' => $response['notifications'][$i]['title'],
+                            'image' => $response['notifications'][$i]['image'],
+                            'price' => $price,
+                            'trackingNotificationCause' => $response['notifications'][$i]['trackingNotificationCause'],
+                            'trackingListName' => $response['notifications'][$i]['trackingListName']
+                        );
+
                     }
-
-                    if ($priceTemp == -1) {
-                        $price = 'not-given';
-                    } else {
-                        $price = floatval($priceTemp) / 100;
-                    }
-
-                    $priceChangedASINs[$i] = array(
-                        'asin' => $response['notifications'][$i]['asin'],
-                        'title' => $response['notifications'][$i]['title'],
-                        'image' => $response['notifications'][$i]['image'],
-                        'price' => $price,
-                        'trackingNotificationCause' => $response['notifications'][$i]['trackingNotificationCause'],
-                        'trackingListName' => $response['notifications'][$i]['trackingListName']
-                    );
-
                 }
             }
 
