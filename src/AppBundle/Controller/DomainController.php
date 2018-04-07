@@ -54,7 +54,7 @@ class DomainController extends Controller
 
         $jsonList['messages'][1]['attachment']['payload']['elements'][5] = array('title' => "United States", 'subtitle' => "You can setup your domain", 'buttons' => array());
         $jsonList['messages'][1]['attachment']['payload']['elements'][5]['buttons'][0] = array('type' => 'json_plugin_url', 'url' => Configuration::showDomainsApiUrl."id=$userID&userFirstName=$userFirstName", 'title' => 'Settings');
-
+/**
         $jsonList['messages'][1]['attachment']['payload']['elements'][6] = array('title' => "United States", 'subtitle' => "You can setup your domain", 'buttons' => array());
         $jsonList['messages'][1]['attachment']['payload']['elements'][6]['buttons'][0] = array('type' => 'json_plugin_url', 'url' => Configuration::showDomainsApiUrl."id=$userID&userFirstName=$userFirstName", 'title' => 'Settings');
 
@@ -72,7 +72,7 @@ class DomainController extends Controller
 
         $jsonList['messages'][1]['attachment']['payload']['elements'][11] = array('title' => "United States", 'subtitle' => "You can setup your domain", 'buttons' => array());
         $jsonList['messages'][1]['attachment']['payload']['elements'][11]['buttons'][0] = array('type' => 'json_plugin_url', 'url' => Configuration::showDomainsApiUrl."id=$userID&userFirstName=$userFirstName", 'title' => 'Settings');
-
+*/
         return new JsonResponse($jsonList);
     }
 
