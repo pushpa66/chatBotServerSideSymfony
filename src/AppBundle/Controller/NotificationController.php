@@ -27,71 +27,8 @@ class NotificationController extends Controller
      * @Route("/api/checkNotifications", name="checkNotifications")
      */
 
-    public function checkNotifications(){
-        $result = $this->getNotificationsFromKeepa();
-
-        if($result!= null) {
-            $arraySize = sizeof($result);
-
-            $userIDs = array();
-
-            for ($i = 0; $i < $arraySize; $i++) {
-                $productASIN = $result[$i]['asin'];
-                $title = $result[$i]['title'];
-                $image = $result[$i]['image'];
-                $price = $result[$i]['price'];
-                $notifyType = $result[$i]['trackingNotificationCause'];
-                $listName = $result[$i]['trackingListName'];
-
-
-                // create an entity manager
-                $entityManager = $this->getDoctrine()->getManager();
-                $availableNotification = $this->getDoctrine()
-                    ->getRepository(Notification::class)
-                    ->findoneBy(
-                        array('userID' => $listName,'productASIN' => $productASIN)
-                    );
-                if(!in_array($listName, $userIDs)){
-                    array_push($userIDs, $listName);
-                }
-
-                if(!$availableNotification){
-                    $notification = new Notification();
-                    $notification->setUserID($listName);
-                    $notification->setProductASIN($productASIN);
-                    $notification->setTitle($title);
-                    $notification->setImage($image);
-                    $notification->setPrice($price);
-                    $notification->setNotifyType($notifyType);
-                    $entityManager->persist($notification);
-                } else {
-                    $availableNotification->setUserID($listName);
-                    $availableNotification->setProductASIN($productASIN);
-                    $availableNotification->setTitle($title);
-                    $availableNotification->setImage($image);
-                    $availableNotification->setPrice($price);
-                    $availableNotification->setNotifyType($notifyType);
-                }
-
-                $entityManager->flush();
-            }
-
-
-            for ($i = 0; $i < sizeof($userIDs); $i++){
-
-                $botID = Configuration::botID;
-                $userID = $userIDs[$i];
-                $token = Configuration::token;
-                $blockID = Configuration::blockID;
-                $this->sendingBlock($botID, $userID, $token, $blockID);
-            }
-        }
-
-        $response = array('status' => 'Ok');
-        return new JsonResponse($response);
-    }
-
-    public function getNotificationsFromKeepa(){
+    public function checkNotifications(Request $request){
+        $listName = $request->get('listName');
 
         $value = 0;
         if (Configuration::testNotifications){
@@ -102,7 +39,7 @@ class NotificationController extends Controller
         curl_setopt_array($curl, array(
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_URL => "https://api.keepa.com/tracking?key=".Configuration::keepaAccessToken."&type=notification&revise=$value",
+            CURLOPT_URL => "https://api.keepa.com/tracking?key=".Configuration::keepaAccessToken."&type=notification&revise=$value&list=$listName",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
@@ -156,8 +93,58 @@ class NotificationController extends Controller
 
                 }
             }
+
+            $arraySize = sizeof($priceChangedASINs);
+
+            if ($arraySize > 0) {
+                for ($i = 0; $i < $arraySize; $i++) {
+                    $productASIN = $priceChangedASINs[$i]['asin'];
+                    $title = $priceChangedASINs[$i]['title'];
+                    $image = $priceChangedASINs[$i]['image'];
+                    $price = $priceChangedASINs[$i]['price'];
+                    $notifyType = $priceChangedASINs[$i]['trackingNotificationCause'];
+                    $listName = $priceChangedASINs[$i]['trackingListName'];
+
+
+                    // create an entity manager
+                    $entityManager = $this->getDoctrine()->getManager();
+                    $availableNotification = $this->getDoctrine()
+                        ->getRepository(Notification::class)
+                        ->findoneBy(
+                            array('userID' => $listName,'productASIN' => $productASIN)
+                        );
+
+                    if(!$availableNotification){
+                        $notification = new Notification();
+                        $notification->setUserID($listName);
+                        $notification->setProductASIN($productASIN);
+                        $notification->setTitle($title);
+                        $notification->setImage($image);
+                        $notification->setPrice($price);
+                        $notification->setNotifyType($notifyType);
+                        $entityManager->persist($notification);
+                    } else {
+                        $availableNotification->setUserID($listName);
+                        $availableNotification->setProductASIN($productASIN);
+                        $availableNotification->setTitle($title);
+                        $availableNotification->setImage($image);
+                        $availableNotification->setPrice($price);
+                        $availableNotification->setNotifyType($notifyType);
+                    }
+
+                    $entityManager->flush();
+                }
+
+                $botID = Configuration::botID;
+                $userID = $listName;
+                $token = Configuration::token;
+                $blockID = Configuration::blockID;
+                $this->sendingBlock($botID, $userID, $token, $blockID);
+            }
         }
-        return $priceChangedASINs;
+
+        $response = array('status' => 'Ok');
+        return new JsonResponse($response);
     }
 
     public function setTrackNotificationCause($number){
