@@ -254,7 +254,7 @@ class NotificationController extends Controller
             $jsonList['messages'][2 * $index + 2]['attachment']['payload']['elements'][0] = array('title' => '' . $productTitle, 'image_url' => "https://images-na.ssl-images-amazon.com/images/I/$productImage", 'subtitle' => '$ ' . $productPrice, 'buttons' => array());
             $jsonList['messages'][2 * $index + 2]['attachment']['payload']['elements'][0]['buttons'][0] = array('type' => 'web_url', 'url' => $url, 'title' => 'View');
             $jsonList['messages'][2 * $index + 2]['attachment']['payload']['elements'][0]['buttons'][1] = array('type' => 'json_plugin_url', 'url' => Configuration::removeTrackedProductApiUrl.$productASIN.'&id='.$userID, 'title' => 'Remove');
-            $jsonList['messages'][2 * $index + 2]['attachment']['payload']['elements'][0]['buttons'][2] = array('type' => 'json_plugin_url', 'url' => Configuration::trackProductApiUrl.$productASIN.'&id='.$userID.'&userFirstName='.$userFirstName.'&price='.$productPrice, 'title' => 'Track Again');
+            $jsonList['messages'][2 * $index + 2]['attachment']['payload']['elements'][0]['buttons'][2] = array('type' => 'json_plugin_url', 'url' => Configuration::trackApiUrl.$productASIN.'&id='.$userID.'&userFirstName='.$userFirstName.'&price='.$productPrice, 'title' => 'Track Again');
 
 
         }
