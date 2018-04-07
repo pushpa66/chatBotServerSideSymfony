@@ -157,15 +157,15 @@ class TrackController extends Controller
                     ->findoneBy(
                         array('productASIN' => $productASIN)
                     );
-            if ($product){
+            if ($product) {
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->remove($product);
                 $entityManager->flush();
             }
-
-            $this->remove($userID, $productASIN);
-
         }
+
+        $this->remove($userID, $productASIN);
+
         $message = array();
         $message['messages'] = array();
         $message['messages'][0] = array("text" => "Product with ASIN ".$productASIN." is removed successfully!");
