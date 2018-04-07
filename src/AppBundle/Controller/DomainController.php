@@ -40,8 +40,8 @@ class DomainController extends Controller
         $jsonList['messages'][1]['attachment']['payload']['elements'][0] = array('title' => "United States", 'subtitle' => ".com", 'buttons' => array());
         $jsonList['messages'][1]['attachment']['payload']['elements'][0]['buttons'][0] = array('type' => 'json_plugin_url', 'url' => Configuration::showDomainsApiUrl."id=$userID&userFirstName=$userFirstName", 'title' => 'Settings');
         //United Kingdom
-//        $jsonList['messages'][1]['attachment']['payload']['elements'][1] = array('title' => "United Kingdom", 'subtitle' => ".co.uk", 'buttons' => array());
-//        $jsonList['messages'][1]['attachment']['payload']['elements'][1]['buttons'][0] = array('type' => 'json_plugin_url', 'url' => Configuration::showDomainsApiUrl."id=$userID&userFirstName=$userFirstName", 'title' => 'Settings');
+        $jsonList['messages'][1]['attachment']['payload']['elements'][1] = array('title' => "United Kingdom", 'subtitle' => ".co.uk", 'buttons' => array());
+        $jsonList['messages'][1]['attachment']['payload']['elements'][1]['buttons'][0] = array('type' => 'json_plugin_url', 'url' => Configuration::showDomainsApiUrl."id=$userID&userFirstName=$userFirstName", 'title' => 'Settings');
 //
 //        $jsonList['messages'][1]['attachment']['payload']['elements'][2] = array('title' => "United States", 'subtitle' => "You can setup your domain", 'buttons' => array());
 //        $jsonList['messages'][1]['attachment']['payload']['elements'][2]['buttons'][0] = array('type' => 'json_plugin_url', 'url' => Configuration::showDomainsApiUrl."id=$userID&userFirstName=$userFirstName", 'title' => 'Settings');
