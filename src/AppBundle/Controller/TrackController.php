@@ -63,20 +63,6 @@ class TrackController extends Controller
         $userFirstName = $request->get('userFirstName');
 
         if ($productPrice != "not-given"){
-            $checkUser = $this->getDoctrine()
-                ->getRepository(User::class)
-                ->findOneBy(
-                    array('userID' => $userID)
-                );
-            if(!$checkUser){
-                $entityManager = $this->getDoctrine()->getManager();
-                $user = new User();
-                $user->setUserID($userID);
-                $user->setUserFirstName($userFirstName);
-                $entityManager->persist($user);
-                $entityManager->flush();
-            }
-
             $checkTrackingByUser = $this->getDoctrine()
                 ->getRepository(UserProduct::class)
                 ->findOneBy(

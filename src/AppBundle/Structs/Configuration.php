@@ -9,6 +9,8 @@
 namespace AppBundle\Structs;
 
 
+use Doctrine\ORM\Query\AST\Functions\ConcatFunction;
+
 class Configuration
 {
     const showItemCount = 10;
@@ -27,12 +29,17 @@ class Configuration
     const trackApiUrl = Configuration::serverUrl."/".Configuration::projectFolder."/web/app_dev.php/api/track?asin=";
     const trackProductApiUrl = Configuration::serverUrl."/".Configuration::projectFolder."/web/app_dev.php/api/trackProduct?asin=";
     const removeTrackedProductApiUrl = Configuration::serverUrl."/".Configuration::projectFolder."/web/app_dev.php/api/removeTrackedProduct?asin=";
+    const showDomainsApiUrl = Configuration::serverUrl."/".Configuration::projectFolder."/api/showDomains?";
+
     const botID = "5a968c95e4b05207f7628608";
     const token = "vnbqX6cpvXUXFcOKr5RHJ7psSpHDRzO1hXBY8dkvn50ZkZyWML3YdtoCnKH7FSjC";
     const blockID = "5aa3ad07e4b094306df10a53";
     const keepaAccessToken = "bmccnl2m5292v3soegcl3abtfe8cd8dbbpg1r7oddnuirodk9h2imk8djkbht4lk";
     const fbAccessToken = "EAAEZChN9WqTYBALwFF6VLYSoqbYB45TzVjMm4TNk8ArI9sgdeqlrckWKTZBtdRipxZCy0gLTiGZCo1mowZCDehmD3rRBbcwSivHJvvxEzfspRVnXQFccpnqLevUbjdOMBYPlZCI44ZCXNLh6ukTJ5YuVz5TfDxmi5PS9sosCGumTZA6lIoBTEjq0";
 
+    const Domain = ['com', 'co.uk', 'de', 'fr', 'co.jp', 'ca', 'cn', 'it', 'es', 'in', 'com.mx', 'com.br'];
+    const Country = ['United States', 'United Kingdom', 'Germany', 'France', 'Japan', 'Canada', 'China', 'Italy', 'Spain', 'India', 'Mexico', 'Brazil'];
+    const Currency = ['$', 'co.uk', 'de', 'fr', 'co.jp', 'ca', 'cn', 'it', 'es', 'in', 'com.mx', 'com.br'];
 
 
     //get all tracked asin list
