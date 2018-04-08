@@ -96,6 +96,34 @@ class DomainController extends Controller
         return new JsonResponse($jsonList);
     }
 
+    /**
+     * @Route("/api/searchFromAmazon", name="searchFromAmazon")
+     */
+    public function searchFromAmazon(Request $request){
+        $userID = $request->get('id');
+        $userFirstName = $request->get('userFirstName');
 
+        $jsonList['messages'][0] = array('text' => "What can I do for you today, $userFirstName!");
+        $jsonList['messages'][1]['attachment'] = array("type" => "template");
+        $jsonList['messages'][1]['attachment']['payload'] = array("template_type" => "list", "top_element_style" => "compact", 'elements' => array());
+        $jsonList['messages'][1]['attachment']['payload']['elements'][0] = array('title' => "Search", 'subtitle' => "Find product from amazon.com", 'buttons' => array());
+        $jsonList['messages'][1]['attachment']['payload']['elements'][0]['buttons'][0] = array('type' => 'web_url', 'url' => 'https://www.amazon.com', 'title' => 'Search');
+        return new JsonResponse($jsonList);
+    }
 
+    /**
+     * @Route("/api/settings", name="settings")
+     */
+    public function settings(Request $request){
+        $userID = $request->get('id');
+        $userFirstName = $request->get('userFirstName');
+
+        $jsonList['messages'][0] = array('text' => "$userFirstName, Setup your domain.");
+        $jsonList['messages'][1]['attachment'] = array("type" => "template");
+        $jsonList['messages'][1]['attachment']['payload'] = array("template_type" => "list", "top_element_style" => "compact", 'elements' => array());
+        $jsonList['messages'][1]['attachment']['payload']['elements'][0] = array('title' => "Settings", 'subtitle' => "You can setup your domain", 'buttons' => array());
+        $jsonList['messages'][1]['attachment']['payload']['elements'][0]['buttons'][0] = array('type' => 'json_plugin_url', 'url' => Configuration::showDomainsApiUrl."id=$userID&userFirstName=$userFirstName", 'title' => 'Settings');
+
+        return new JsonResponse($jsonList);
+    }
 }
