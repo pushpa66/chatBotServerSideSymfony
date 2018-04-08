@@ -206,7 +206,7 @@ class FindOrSearchController extends Controller
             } else {
                 $response = json_decode($response, true);
 
-                if ($response['products'][0]){
+                if ($response['products'][0]['imagesCSV'] != null){
 //                    $message = array();
 //                    $message['messages'] = $response['products'][0];
 
@@ -252,7 +252,7 @@ class FindOrSearchController extends Controller
                 } else {
                     $message = array();
                     $message['messages'] = array();
-                    $message['messages'][] = array('text' => 'No products are found for ASIN : \''.$asin.'.\'');
+                    $message['messages'][] = array('text' => "No products are found for ASIN : '$asin' in this domain. Check again!");
                     return new JsonResponse($message);
                 }
 
