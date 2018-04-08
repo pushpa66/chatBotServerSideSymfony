@@ -49,18 +49,19 @@ class DomainController extends Controller
         $jsonList['messages'][1]['attachment']['payload']['elements'][3] = array('title' => "sdds", 'subtitle' => "dddd", 'buttons' => array());
         $jsonList['messages'][1]['attachment']['payload']['elements'][3]['buttons'][0] = array('type' => 'json_plugin_url', 'url' => Configuration::showDomainsApiUrl."id=$userID&userFirstName=$userFirstName", 'title' => 'Settings');
 
-        $jsonList['messages'][1]['attachment']['payload']['elements'][4] = array('title' => "Ussd", 'subtitle' => "Ydsd", 'buttons' => array());
-        $jsonList['messages'][1]['attachment']['payload']['elements'][4]['buttons'][0] = array('type' => 'json_plugin_url', 'url' => Configuration::showDomainsApiUrl."id=$userID&userFirstName=$userFirstName", 'title' => 'Settings');
+        $jsonList['messages'][2]['attachment']['payload']['elements'][0] = array('title' => "Ussd", 'subtitle' => "Ydsd", 'buttons' => array());
+        $jsonList['messages'][2]['attachment']['payload']['elements'][0]['buttons'][0] = array('type' => 'json_plugin_url', 'url' => Configuration::showDomainsApiUrl."id=$userID&userFirstName=$userFirstName", 'title' => 'Settings');
+
+        $jsonList['messages'][2]['attachment']['payload']['elements'][1] = array('title' => "xxasc", 'subtitle' => "dsd", 'buttons' => array());
+        $jsonList['messages'][2]['attachment']['payload']['elements'][1]['buttons'][0] = array('type' => 'json_plugin_url', 'url' => Configuration::showDomainsApiUrl."id=$userID&userFirstName=$userFirstName", 'title' => 'Settings');
+
+        $jsonList['messages'][2]['attachment']['payload']['elements'][2] = array('title' => "United States", 'subtitle' => "You can setup your domain", 'buttons' => array());
+        $jsonList['messages'][2]['attachment']['payload']['elements'][2]['buttons'][0] = array('type' => 'json_plugin_url', 'url' => Configuration::showDomainsApiUrl."id=$userID&userFirstName=$userFirstName", 'title' => 'Settings');
+
+        $jsonList['messages'][2]['attachment']['payload']['elements'][3] = array('title' => "United States", 'subtitle' => "You can setup your domain", 'buttons' => array());
+        $jsonList['messages'][2]['attachment']['payload']['elements'][3]['buttons'][0] = array('type' => 'json_plugin_url', 'url' => Configuration::showDomainsApiUrl."id=$userID&userFirstName=$userFirstName", 'title' => 'Settings');
+
         /**
-        $jsonList['messages'][1]['attachment']['payload']['elements'][5] = array('title' => "xxasc", 'subtitle' => "dsd", 'buttons' => array());
-        $jsonList['messages'][1]['attachment']['payload']['elements'][5]['buttons'][0] = array('type' => 'json_plugin_url', 'url' => Configuration::showDomainsApiUrl."id=$userID&userFirstName=$userFirstName", 'title' => 'Settings');
-
-        $jsonList['messages'][1]['attachment']['payload']['elements'][6] = array('title' => "United States", 'subtitle' => "You can setup your domain", 'buttons' => array());
-        $jsonList['messages'][1]['attachment']['payload']['elements'][6]['buttons'][0] = array('type' => 'json_plugin_url', 'url' => Configuration::showDomainsApiUrl."id=$userID&userFirstName=$userFirstName", 'title' => 'Settings');
-
-        $jsonList['messages'][1]['attachment']['payload']['elements'][7] = array('title' => "United States", 'subtitle' => "You can setup your domain", 'buttons' => array());
-        $jsonList['messages'][1]['attachment']['payload']['elements'][7]['buttons'][0] = array('type' => 'json_plugin_url', 'url' => Configuration::showDomainsApiUrl."id=$userID&userFirstName=$userFirstName", 'title' => 'Settings');
-
         $jsonList['messages'][1]['attachment']['payload']['elements'][8] = array('title' => "United States", 'subtitle' => "You can setup your domain", 'buttons' => array());
         $jsonList['messages'][1]['attachment']['payload']['elements'][8]['buttons'][0] = array('type' => 'json_plugin_url', 'url' => Configuration::showDomainsApiUrl."id=$userID&userFirstName=$userFirstName", 'title' => 'Settings');
 
