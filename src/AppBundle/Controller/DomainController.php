@@ -33,7 +33,9 @@ class DomainController extends Controller
         $userID = $request->get('id');
         $userFirstName = $request->get('userFirstName');
 
+        //=============================================
         $jsonList['messages'][0] = array('text' => "Set one of the following domains");
+        //=============================================
         $jsonList['messages'][1]['attachment'] = array("type" => "template");
         $jsonList['messages'][1]['attachment']['payload'] = array("template_type" => "list", "top_element_style" => "compact", 'elements' => array());
         //United States
@@ -48,6 +50,10 @@ class DomainController extends Controller
 
         $jsonList['messages'][1]['attachment']['payload']['elements'][3] = array('title' => "sdds", 'subtitle' => "dddd", 'buttons' => array());
         $jsonList['messages'][1]['attachment']['payload']['elements'][3]['buttons'][0] = array('type' => 'json_plugin_url', 'url' => Configuration::showDomainsApiUrl."id=$userID&userFirstName=$userFirstName", 'title' => 'Settings');
+
+        //==================================================
+        $jsonList['messages'][2]['attachment'] = array("type" => "template");
+        $jsonList['messages'][2]['attachment']['payload'] = array("template_type" => "list", "top_element_style" => "compact", 'elements' => array());
 
         $jsonList['messages'][2]['attachment']['payload']['elements'][0] = array('title' => "Ussd", 'subtitle' => "Ydsd", 'buttons' => array());
         $jsonList['messages'][2]['attachment']['payload']['elements'][0]['buttons'][0] = array('type' => 'json_plugin_url', 'url' => Configuration::showDomainsApiUrl."id=$userID&userFirstName=$userFirstName", 'title' => 'Settings');
