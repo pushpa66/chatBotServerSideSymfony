@@ -46,6 +46,11 @@ class DomainController extends Controller
 
         $entityManager->flush();
 
+        $message = array();
+        $message['messages'] = array();
+        $message['messages'][] = array('text' => "Now you find product on www.amazon.".Configuration::Domain[$domain - 1].". Try with key word or product asin.");
+        return new JsonResponse($message);
+
     }
 
     /**
