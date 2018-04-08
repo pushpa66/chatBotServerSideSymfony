@@ -33,23 +33,30 @@ class TrackController extends Controller
         $userFirstName = $request->get('userFirstName');
         $domain = $request->get('domain');
 
-        $price1 = round($productPrice - $productPrice * 5 / 100, 2);
-        $price2 = round($productPrice - $productPrice * 10 / 100, 2);
-        $price3 = round($productPrice - $productPrice * 15 / 100, 2);
+        if ($productPrice != "not-given") {
+            $price1 = round($productPrice - $productPrice * 5 / 100, 2);
+            $price2 = round($productPrice - $productPrice * 10 / 100, 2);
+            $price3 = round($productPrice - $productPrice * 15 / 100, 2);
 
-        $jsonButtonsMessage = array();
-        $jsonButtonsMessage['messages'] = array();
-        $jsonButtonsMessage['messages'][0]['attachment'] = array("type" => "template");
+            $jsonButtonsMessage = array();
+            $jsonButtonsMessage['messages'] = array();
+            $jsonButtonsMessage['messages'][0]['attachment'] = array("type" => "template");
 
-        $text = "Tracking criteria for ASIN : $productASIN.";
-        $buttons = array();
-        $buttons[0] = array('type' => 'json_plugin_url', 'url' => Configuration::trackProductApiUrl."$productASIN&id=$userID&userFirstName=$userFirstName&price=$productPrice&percentage=5&domain=$domain", 'title' => '5% '.Configuration::Currency[$domain - 1].$price1.')');
-        $buttons[1] = array('type' => 'json_plugin_url', 'url' => Configuration::trackProductApiUrl."$productASIN&id=$userID&userFirstName=$userFirstName&price=$productPrice&percentage=10&domain=$domain", 'title' => '10% '.Configuration::Currency[$domain - 1].$price2.')');
-        $buttons[2] = array('type' => 'json_plugin_url', 'url' => Configuration::trackProductApiUrl."$productASIN&id=$userID&userFirstName=$userFirstName&price=$productPrice&percentage=15&domain=$domain", 'title' => '15% '.Configuration::Currency[$domain - 1].$price3.')');
+            $text = "Tracking criteria for ASIN : $productASIN.";
+            $buttons = array();
+            $buttons[0] = array('type' => 'json_plugin_url', 'url' => Configuration::trackProductApiUrl . "$productASIN&id=$userID&userFirstName=$userFirstName&price=$productPrice&percentage=5&domain=$domain", 'title' => '5% (' . Configuration::Currency[$domain - 1] . $price1 . ')');
+            $buttons[1] = array('type' => 'json_plugin_url', 'url' => Configuration::trackProductApiUrl . "$productASIN&id=$userID&userFirstName=$userFirstName&price=$productPrice&percentage=10&domain=$domain", 'title' => '10% (' . Configuration::Currency[$domain - 1] . $price2 . ')');
+            $buttons[2] = array('type' => 'json_plugin_url', 'url' => Configuration::trackProductApiUrl . "$productASIN&id=$userID&userFirstName=$userFirstName&price=$productPrice&percentage=15&domain=$domain", 'title' => '15% (' . Configuration::Currency[$domain - 1] . $price3 . ')');
 
-        $jsonButtonsMessage['messages'][0]['attachment']['payload'] = array("template_type" => "button", "text" => $text, "buttons" => $buttons);
+            $jsonButtonsMessage['messages'][0]['attachment']['payload'] = array("template_type" => "button", "text" => $text, "buttons" => $buttons);
 
-        return new JsonResponse($jsonButtonsMessage);
+            return new JsonResponse($jsonButtonsMessage);
+        } else {
+            $message = array();
+            $message['messages'] = array();
+            $message['messages'][] = array('text'=>'Sorry!! I can not track this product. Price is not available.');
+            return new JsonResponse($message);
+        }
     }
 
     /**
@@ -64,53 +71,47 @@ class TrackController extends Controller
         $userFirstName = $request->get('userFirstName');
         $domain = $request->get('domain');
 
-        if ($productPrice != "not-given"){
-            $checkTrackingByUser = $this->getDoctrine()
-                ->getRepository(UserProduct::class)
+
+        $checkTrackingByUser = $this->getDoctrine()
+            ->getRepository(UserProduct::class)
+            ->findOneBy(
+                array('userID' => $userID, 'productASIN' => $productASIN)
+            );
+        if(!$checkTrackingByUser){
+            $productCheck = $this->getDoctrine()
+                ->getRepository(Product::class)
                 ->findOneBy(
-                    array('userID' => $userID, 'productASIN' => $productASIN)
+                    array('productASIN' => $productASIN)
                 );
-            if(!$checkTrackingByUser){
-                $productCheck = $this->getDoctrine()
-                    ->getRepository(Product::class)
-                    ->findOneBy(
-                        array('productASIN' => $productASIN)
-                    );
-                if(!$productCheck){
-                    $entityManager = $this->getDoctrine()->getManager();
-                    $product = new Product();
-                    $product->setProductASIN($productASIN);
-                    $entityManager->persist($product);
-                    $entityManager->flush();
-                }
-
+            if(!$productCheck){
                 $entityManager = $this->getDoctrine()->getManager();
-                $userProduct = new UserProduct();
-                $userProduct->setUserID($userID);
-                $userProduct->setProductASIN($productASIN);
-                $entityManager->persist($userProduct);
+                $product = new Product();
+                $product->setProductASIN($productASIN);
+                $entityManager->persist($product);
                 $entityManager->flush();
-
-                $this->trackThisASIN($domain, $productASIN, $userID, $productPrice, $percentage);
-
-                $message = array();
-                $message['messages'] = array();
-                $message['messages'][] = array('text'=>$userFirstName.', your product with ASIN : \''.$productASIN.'\' is tracked successfully with '.$percentage.'% price reduction.');
-                return new JsonResponse($message);
-            } else {
-
-                $this->remove($userID, $productASIN);
-                $this->trackThisASIN($domain, $productASIN, $userID, $productPrice, $percentage);
-
-                $message = array();
-                $message['messages'] = array();
-                $message['messages'][] = array('text'=>'You have already tracked this product with ASIN : \''.$productASIN.'\'. Update it with '.$percentage.'% price reduction.');
-                return new JsonResponse($message);
             }
-        } else {
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $userProduct = new UserProduct();
+            $userProduct->setUserID($userID);
+            $userProduct->setProductASIN($productASIN);
+            $entityManager->persist($userProduct);
+            $entityManager->flush();
+
+            $this->trackThisASIN($domain, $productASIN, $userID, $productPrice, $percentage);
+
             $message = array();
             $message['messages'] = array();
-            $message['messages'][] = array('text'=>'Sorry!! I can not track this product. Price is not available.');
+            $message['messages'][] = array('text'=>$userFirstName.', your product with ASIN : \''.$productASIN.'\' is tracked successfully with '.$percentage.'% price reduction.');
+            return new JsonResponse($message);
+        } else {
+
+            $this->remove($userID, $productASIN);
+            $this->trackThisASIN($domain, $productASIN, $userID, $productPrice, $percentage);
+
+            $message = array();
+            $message['messages'] = array();
+            $message['messages'][] = array('text'=>'You have already tracked this product with ASIN : \''.$productASIN.'\'. Update it with '.$percentage.'% price reduction.');
             return new JsonResponse($message);
         }
     }
