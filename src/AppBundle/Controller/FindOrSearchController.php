@@ -164,7 +164,7 @@ class FindOrSearchController extends Controller
 
                         $jsonList['messages'][1]['attachment']['payload']['elements'][$i] = array('title' => '' . $productTitle, 'image_url' => "https://images-na.ssl-images-amazon.com/images/I/$imagesArray[0]", 'subtitle' => Configuration::Currency[$domain - 1].' '.$price, 'buttons' => array());
                         $jsonList['messages'][1]['attachment']['payload']['elements'][$i]['buttons'][0] = array('type' => 'web_url', 'url' => '' . $url, 'title' => 'View');
-                        $jsonList['messages'][1]['attachment']['payload']['elements'][$i]['buttons'][1] = array('type' => 'json_plugin_url', 'url' =>  Configuration::trackApiUrl.$asinOfProduct.'&id='.$userID.'&userFirstName='.$userFirstName.'&price='.$price, 'title' => 'Track');
+                        $jsonList['messages'][1]['attachment']['payload']['elements'][$i]['buttons'][1] = array('type' => 'json_plugin_url', 'url' =>  Configuration::trackApiUrl.$asinOfProduct."&id=$userID&userFirstName=$userFirstName&price=$price&domain=$domain", 'title' => 'Track');
                     }
 
                     if ($maxIndex != $productCount){
@@ -246,7 +246,7 @@ class FindOrSearchController extends Controller
                     $jsonList['messages'][1]['attachment']['payload'] = array("template_type" => "generic","image_aspect_ratio" => "square", 'elements' => array());
                     $jsonList['messages'][1]['attachment']['payload']['elements'][0] = array('title' => $productTitle, 'image_url' => "https://images-na.ssl-images-amazon.com/images/I/$imagesArray[0]", 'subtitle' => Configuration::Currency[$domain - 1].' '.$price, 'buttons' => array());
                     $jsonList['messages'][1]['attachment']['payload']['elements'][0]['buttons'][0] = array('type' => 'web_url', 'url' => $url, 'title' => 'View');
-                    $jsonList['messages'][1]['attachment']['payload']['elements'][0]['buttons'][1] = array('type' => 'json_plugin_url', 'url' => Configuration::trackApiUrl.$asin.'&id='.$userID.'&userFirstName='.$userFirstName.'&price='.$price, 'title' => 'Track');
+                    $jsonList['messages'][1]['attachment']['payload']['elements'][0]['buttons'][1] = array('type' => 'json_plugin_url', 'url' => Configuration::trackApiUrl.$asin."&id=$userID&userFirstName=$userFirstName&price=$price&domain=$domain", 'title' => 'Track');
                     return new JsonResponse($jsonList);
 
                 } else {

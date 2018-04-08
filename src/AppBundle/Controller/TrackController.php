@@ -31,6 +31,7 @@ class TrackController extends Controller
         $productPrice = $request->get('price');
         $userID = $request->get('id');
         $userFirstName = $request->get('userFirstName');
+        $domain = $request->get('domain');
 
         $price1 = round($productPrice - $productPrice * 5 / 100, 2);
         $price2 = round($productPrice - $productPrice * 10 / 100, 2);
@@ -42,9 +43,9 @@ class TrackController extends Controller
 
         $text = "Tracking criteria for ASIN : $productASIN.";
         $buttons = array();
-        $buttons[0] = array('type' => 'json_plugin_url', 'url' => Configuration::trackProductApiUrl.$productASIN.'&id='.$userID.'&userFirstName='.$userFirstName.'&price='.$productPrice.'&percentage=5', 'title' => '5% ($ '.$price1.')');
-        $buttons[1] = array('type' => 'json_plugin_url', 'url' => Configuration::trackProductApiUrl.$productASIN.'&id='.$userID.'&userFirstName='.$userFirstName.'&price='.$productPrice.'&percentage=10', 'title' => '10% ($ '.$price2.')');
-        $buttons[2] = array('type' => 'json_plugin_url', 'url' => Configuration::trackProductApiUrl.$productASIN.'&id='.$userID.'&userFirstName='.$userFirstName.'&price='.$productPrice.'&percentage=15', 'title' => '15% ($ '.$price3.')');
+        $buttons[0] = array('type' => 'json_plugin_url', 'url' => Configuration::trackProductApiUrl."$productASIN&id=$userID&userFirstName=$userFirstName&price=$productPrice&percentage=5&domain=$domain", 'title' => '5% '.Configuration::Currency[$domain - 1].$price1.')');
+        $buttons[1] = array('type' => 'json_plugin_url', 'url' => Configuration::trackProductApiUrl."$productASIN&id=$userID&userFirstName=$userFirstName&price=$productPrice&percentage=10&domain=$domain", 'title' => '10% '.Configuration::Currency[$domain - 1].$price2.')');
+        $buttons[2] = array('type' => 'json_plugin_url', 'url' => Configuration::trackProductApiUrl."$productASIN&id=$userID&userFirstName=$userFirstName&price=$productPrice&percentage=15&domain=$domain", 'title' => '15% '.Configuration::Currency[$domain - 1].$price3.')');
 
         $jsonButtonsMessage['messages'][0]['attachment']['payload'] = array("template_type" => "button", "text" => $text, "buttons" => $buttons);
 
@@ -61,6 +62,7 @@ class TrackController extends Controller
         $percentage = $request->get('percentage');
         $userID = $request->get('id');
         $userFirstName = $request->get('userFirstName');
+        $domain = $request->get('domain');
 
         if ($productPrice != "not-given"){
             $checkTrackingByUser = $this->getDoctrine()
@@ -89,7 +91,7 @@ class TrackController extends Controller
                 $entityManager->persist($userProduct);
                 $entityManager->flush();
 
-                $this->trackThisASIN($productASIN, $userID, $productPrice, $percentage);
+                $this->trackThisASIN($domain, $productASIN, $userID, $productPrice, $percentage);
 
                 $message = array();
                 $message['messages'] = array();
@@ -98,7 +100,7 @@ class TrackController extends Controller
             } else {
 
                 $this->remove($userID, $productASIN);
-                $this->trackThisASIN($productASIN, $userID, $productPrice, $percentage);
+                $this->trackThisASIN($domain, $productASIN, $userID, $productPrice, $percentage);
 
                 $message = array();
                 $message['messages'] = array();
@@ -120,6 +122,7 @@ class TrackController extends Controller
     {
         $productASIN = $request->get('asin');
         $userID = $request->get('id');
+
 
         $userProduct = $this->getDoctrine()
             ->getRepository(UserProduct::class)
@@ -158,7 +161,7 @@ class TrackController extends Controller
         return new JsonResponse($message);
     }
 
-    public function trackThisASIN($productASIN, $listName, $productPrice , $percentage){
+    public function trackThisASIN($domain, $productASIN, $listName, $productPrice , $percentage){
 
         $productPriceLower = round($productPrice - $productPrice * $percentage / 100, 2) * 100;
 //        $productPriceUpper = round($productPrice + $productPrice * $percentage / 100, 2) * 100;
@@ -178,25 +181,25 @@ class TrackController extends Controller
 
         $trackingThresholdValue[0] = array(
             "thresholdValue" => $productPriceLower,
-            "domain" =>  1,
+            "domain" =>  $domain,
             "csvType" => 1,
             "isDrop" => true
         );
         $trackingThresholdValue[1] = array(
             "thresholdValue" => $productPriceUpper,
-            "domain" =>  1,
+            "domain" =>  $domain,
             "csvType" => 1,
             "isDrop" => false
         );
 
         $trackingNotifyIf = array();
         $trackingNotifyIf[0] = array(
-            "domain" => 1,
+            "domain" => $domain,
             "csvType" => 1,
             "notifyIfType" => 0,
         );
         $trackingNotifyIf[1] = array(
-            "domain" => 1,
+            "domain" => $domain,
             "csvType" => 1,
             "notifyIfType" => 1,
         );
@@ -206,7 +209,7 @@ class TrackController extends Controller
             "ttl" => 0,
             "expireNotify" => true,
             "desiredPricesInMainCurrency" => true,
-            "mainDomainId" => 1,
+            "mainDomainId" => $domain,
             "updateInterval" => 1,
             "thresholdValues" => $trackingThresholdValue,
             "notifyIf" => $trackingNotifyIf,
