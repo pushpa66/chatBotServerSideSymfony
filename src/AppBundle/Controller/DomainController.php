@@ -106,7 +106,7 @@ class DomainController extends Controller
 
         $entityManager->flush();
 
-        $jsonList['messages'][0] = array('text' => "$userFirstName, Search or change your domain.");
+        $jsonList['messages'][0] = array('text' => "$userFirstName, Search products or change your domain.");
         $jsonList['messages'][1]['attachment'] = array("type" => "template");
         $jsonList['messages'][1]['attachment']['payload'] = array("template_type" => "list", "top_element_style" => "compact", 'elements' => array());
         $jsonList['messages'][1]['attachment']['payload']['elements'][0] = array('title' => "Search", 'subtitle' => "Find product from amazon.".Configuration::Domain[$domain - 1], 'buttons' => array());
