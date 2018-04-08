@@ -142,7 +142,7 @@ class FindOrSearchController extends Controller
 
                         $productTitle = $response['products'][$index + $i]['title'];
                         $asinOfProduct = $response['products'][$index + $i]['asin'];
-                        $url = "https://www.amazon.com/dp/$asinOfProduct";
+                        $url = "https://www.amazon.".Configuration::Domain[$domain - 1]."/dp/$asin";
 
                         $csvCount = sizeof($response['products'][$index + $i]['csv'][1]);
                         $priceTemp = 0;
@@ -215,7 +215,7 @@ class FindOrSearchController extends Controller
 //                    $message['messages'] = $response['products'][0];
 
                     $productTitle = $response['products'][0]['title'];
-                    $url = "https://www.amazon.com/dp/$asin";
+                    $url = "https://www.amazon.".Configuration::Domain[$domain - 1]."/dp/$asin";
 
                     $csvCount = sizeof($response['products'][0]['csv'][1]);
                     $priceTemp = 0;
