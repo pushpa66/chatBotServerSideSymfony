@@ -154,10 +154,6 @@ class FindOrSearchController extends Controller
                             }
                         }
 
-//                        $csvCount = sizeof($response['products'][$index + $i]['csv'][1]);
-//                        $priceTemp = $response['products'][$index + $i]['csv'][1][$csvCount - 1];
-//
-
                         if ($priceTemp == -1) {
                             $price = 'not-given';
                         } else {
@@ -166,7 +162,7 @@ class FindOrSearchController extends Controller
 
                         $imagesArray = preg_split("/,/", $response['products'][$index + $i]['imagesCSV']);
 
-                        $jsonList['messages'][1]['attachment']['payload']['elements'][$i] = array('title' => '' . $productTitle, 'image_url' => "https://images-na.ssl-images-amazon.com/images/I/$imagesArray[0]", 'subtitle' => '$ ' . $price, 'buttons' => array());
+                        $jsonList['messages'][1]['attachment']['payload']['elements'][$i] = array('title' => '' . $productTitle, 'image_url' => "https://images-na.ssl-images-amazon.com/images/I/$imagesArray[0]", 'subtitle' => Configuration::Currency[$domain - 1].' '.$price, 'buttons' => array());
                         $jsonList['messages'][1]['attachment']['payload']['elements'][$i]['buttons'][0] = array('type' => 'web_url', 'url' => '' . $url, 'title' => 'View');
                         $jsonList['messages'][1]['attachment']['payload']['elements'][$i]['buttons'][1] = array('type' => 'json_plugin_url', 'url' =>  Configuration::trackApiUrl.$asinOfProduct.'&id='.$userID.'&userFirstName='.$userFirstName.'&price='.$price, 'title' => 'Track');
                     }
@@ -248,7 +244,7 @@ class FindOrSearchController extends Controller
 //                    $jsonList['messages'][1]['attachment']['payload'] = array("template_type" => "list", "top_element_style" => "compact", 'elements' => array());
 
                     $jsonList['messages'][1]['attachment']['payload'] = array("template_type" => "generic","image_aspect_ratio" => "square", 'elements' => array());
-                    $jsonList['messages'][1]['attachment']['payload']['elements'][0] = array('title' => $productTitle, 'image_url' => "https://images-na.ssl-images-amazon.com/images/I/$imagesArray[0]", 'subtitle' => '$ ' . $price, 'buttons' => array());
+                    $jsonList['messages'][1]['attachment']['payload']['elements'][0] = array('title' => $productTitle, 'image_url' => "https://images-na.ssl-images-amazon.com/images/I/$imagesArray[0]", 'subtitle' => Configuration::Currency[$domain - 1].' '.$price, 'buttons' => array());
                     $jsonList['messages'][1]['attachment']['payload']['elements'][0]['buttons'][0] = array('type' => 'web_url', 'url' => $url, 'title' => 'View');
                     $jsonList['messages'][1]['attachment']['payload']['elements'][0]['buttons'][1] = array('type' => 'json_plugin_url', 'url' => Configuration::trackApiUrl.$asin.'&id='.$userID.'&userFirstName='.$userFirstName.'&price='.$price, 'title' => 'Track');
                     return new JsonResponse($jsonList);
