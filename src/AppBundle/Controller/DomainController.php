@@ -85,25 +85,26 @@ class DomainController extends Controller
         $userID = $request->get('id');
         $userFirstName = $request->get('userFirstName');
 
-        $user = $this->getDoctrine()
-            ->getRepository(User::class)
-            ->findoneBy(
-                array('userID' => $userID)
-            );
-
-        $entityManager = $this->getDoctrine()->getManager();
         $domain = "1";
-        if(!$user){
-            $newUser = new User();
-            $newUser->setUserID($userID);
-            $newUser->setUserFirstName($userFirstName);
-            $newUser->setDomainID($domain);
-            $entityManager->persist($newUser);
-        } else {
-            $domain = $user->getDomain();
-        }
+//        $user = $this->getDoctrine()
+//            ->getRepository(User::class)
+//            ->findoneBy(
+//                array('userID' => $userID)
+//            );
+//
+//        $entityManager = $this->getDoctrine()->getManager();
 
-        $entityManager->flush();
+//        if(!$user){
+//            $newUser = new User();
+//            $newUser->setUserID($userID);
+//            $newUser->setUserFirstName($userFirstName);
+//            $newUser->setDomainID($domain);
+//            $entityManager->persist($newUser);
+//        } else {
+//            $domain = $user->getDomain();
+//        }
+//
+//        $entityManager->flush();
 
         $jsonList['messages'][0] = array('text' => "What can I do for you today, $userFirstName!");
         $jsonList['messages'][1]['attachment'] = array("type" => "template");
