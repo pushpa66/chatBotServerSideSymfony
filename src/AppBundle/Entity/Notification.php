@@ -63,6 +63,28 @@ class Notification
      */
     private $notifyType;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="domainID", type="string", length=2)
+     */
+    private $domainID;
+
+    /**
+     * @return string
+     */
+    public function getDomainID()
+    {
+        return $this->domainID;
+    }
+
+    /**
+     * @param string $domainID
+     */
+    public function setDomainID($domainID)
+    {
+        $this->domainID = $domainID;
+    }
 
     /**
      * Get id

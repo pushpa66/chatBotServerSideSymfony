@@ -89,7 +89,8 @@ class NotificationController extends Controller
                             'image' => $response['notifications'][$i]['image'],
                             'price' => $price,
                             'trackingNotificationCause' => $response['notifications'][$i]['trackingNotificationCause'],
-                            'trackingListName' => $response['notifications'][$i]['trackingListName']
+                            'trackingListName' => $response['notifications'][$i]['trackingListName'],
+                            'domainID' => $response['notifications'][$i]['domainId']
                         );
 
                     }
@@ -106,6 +107,7 @@ class NotificationController extends Controller
                     $price = $priceChangedASINs[$i]['price'];
                     $notifyType = $priceChangedASINs[$i]['trackingNotificationCause'];
                     $listName = $priceChangedASINs[$i]['trackingListName'];
+                    $domainID = $priceChangedASINs[$i]['domainID'];
 
 
                     // create an entity manager
@@ -113,7 +115,7 @@ class NotificationController extends Controller
                     $availableNotification = $this->getDoctrine()
                         ->getRepository(Notification::class)
                         ->findoneBy(
-                            array('userID' => $listName,'productASIN' => $productASIN)
+                            array('userID' => $listName,'productASIN' => $productASIN, 'domainID' => $domainID)
                         );
 
                     if(!$availableNotification){
@@ -124,6 +126,7 @@ class NotificationController extends Controller
                         $notification->setImage($image);
                         $notification->setPrice($price);
                         $notification->setNotifyType($notifyType);
+                        $notification->setDomainID($domainID);
                         $entityManager->persist($notification);
                     } else {
                         $availableNotification->setUserID($listName);
@@ -132,6 +135,7 @@ class NotificationController extends Controller
                         $availableNotification->setImage($image);
                         $availableNotification->setPrice($price);
                         $availableNotification->setNotifyType($notifyType);
+                        $availableNotification->setDomainID($domainID);
                     }
 
                     $entityManager->flush();
@@ -245,8 +249,9 @@ class NotificationController extends Controller
             $productImage = $notifications[$index]->getImage();
             $productPrice = $notifications[$index]->getPrice();
             $notificationMessage = $this->setTrackNotificationCause($notifications[$index] -> getNotifyType());
+            $domainID = $notifications[$index]->getDomainID();
 
-            $url = "https://www.amazon.com/dp/$productASIN";
+            $url = "https://www.amazon.".Configuration::Domain[$domainID - 1]."/dp/$productASIN";
 
             $jsonList['messages'][2 * $index + 1] = array("text" => $notificationMessage);
             $jsonList['messages'][2 * $index + 2]['attachment'] = array("type" => "template");
@@ -254,7 +259,7 @@ class NotificationController extends Controller
             $jsonList['messages'][2 * $index + 2]['attachment']['payload']['elements'][0] = array('title' => '' . $productTitle, 'image_url' => "https://images-na.ssl-images-amazon.com/images/I/$productImage", 'subtitle' => '$ ' . $productPrice, 'buttons' => array());
             $jsonList['messages'][2 * $index + 2]['attachment']['payload']['elements'][0]['buttons'][0] = array('type' => 'web_url', 'url' => $url, 'title' => 'View');
             $jsonList['messages'][2 * $index + 2]['attachment']['payload']['elements'][0]['buttons'][1] = array('type' => 'json_plugin_url', 'url' => Configuration::removeTrackedProductApiUrl.$productASIN.'&id='.$userID, 'title' => 'Remove');
-            $jsonList['messages'][2 * $index + 2]['attachment']['payload']['elements'][0]['buttons'][2] = array('type' => 'json_plugin_url', 'url' => Configuration::trackApiUrl.$productASIN.'&id='.$userID.'&userFirstName='.$userFirstName.'&price='.$productPrice, 'title' => 'Track Again');
+            $jsonList['messages'][2 * $index + 2]['attachment']['payload']['elements'][0]['buttons'][2] = array('type' => 'json_plugin_url', 'url' => Configuration::trackApiUrl."$productASIN&id=$userID&userFirstName=$userFirstName&price=$productPrice&domain=$domainID", 'title' => 'Track Again');
 
 
         }

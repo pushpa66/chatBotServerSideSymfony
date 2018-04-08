@@ -29,6 +29,7 @@ class Configuration
     const trackApiUrl = Configuration::serverUrl."/".Configuration::projectFolder."/web/app_dev.php/api/track?asin=";
     const trackProductApiUrl = Configuration::serverUrl."/".Configuration::projectFolder."/web/app_dev.php/api/trackProduct?asin=";
     const removeTrackedProductApiUrl = Configuration::serverUrl."/".Configuration::projectFolder."/web/app_dev.php/api/removeTrackedProduct?asin=";
+
     const setDomainApiUrl = Configuration::serverUrl."/".Configuration::projectFolder."/web/app_dev.php/api/setDomain?";
     const showDomainsApiUrl = Configuration::serverUrl."/".Configuration::projectFolder."/web/app_dev.php/api/showDomains?";
 
