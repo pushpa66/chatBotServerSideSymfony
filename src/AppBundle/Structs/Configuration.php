@@ -40,7 +40,7 @@ class Configuration
 
     const Domain = ['com', 'co.uk', 'de', 'fr', 'co.jp', 'ca', 'cn', 'it', 'es', 'in', 'com.mx', 'com.br'];
     const Country = ['United States', 'United Kingdom', 'Germany', 'France', 'Japan', 'Canada', 'China', 'Italy', 'Spain', 'India', 'Mexico', 'Brazil'];
-    const Currency = ['$', 'co.uk', 'de', 'fr', 'co.jp', 'ca', 'cn', 'it', 'es', 'in', 'com.mx', 'com.br'];
+    const Currency = ['$', '£', 'EUR', 'EUR', '¥', 'CDN$', '¥', '‎EUR', 'EUR', 'INR', '$', 'R$'];
 
 
     //get all tracked asin list

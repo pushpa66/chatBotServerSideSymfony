@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\User;
 use AppBundle\Structs\Configuration;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -28,6 +29,13 @@ class FindOrSearchController extends Controller
         $userFirstName = $request->get('userFirstName');
         $startIndex = $request->get('index');
 
+        $user = $this->getDoctrine()
+            ->getRepository(User::class)
+            ->findoneBy(
+                array('userID' => $userID)
+            );
+        $domain = $user->getDomainID();
+
         if(!$startIndex) {
             $startIndex = 0;
         }
@@ -45,7 +53,7 @@ class FindOrSearchController extends Controller
 
 
         if (!$asinCheck){
-            $check1 = "https://www.amazon.com";
+            $check1 = "https://www.amazon.";
             $check2 = "/dp/";
             $check3 = "/product/";
 
@@ -76,7 +84,7 @@ class FindOrSearchController extends Controller
             curl_setopt_array($curl, array(
                 CURLOPT_FOLLOWLOCATION => true,
                 CURLOPT_SSL_VERIFYPEER => false,
-                CURLOPT_URL => "https://api.keepa.com/search?key=".Configuration::keepaAccessToken."&domain=1&type=product&term=$asin",
+                CURLOPT_URL => "https://api.keepa.com/search?key=".Configuration::keepaAccessToken."&domain=$domain&type=product&term=$asin",
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => "",
                 CURLOPT_MAXREDIRS => 10,
@@ -179,7 +187,7 @@ class FindOrSearchController extends Controller
             curl_setopt_array($curl, array(
                 CURLOPT_FOLLOWLOCATION => true,
                 CURLOPT_SSL_VERIFYPEER => false,
-                CURLOPT_URL => "https://api.keepa.com/product?key=".Configuration::keepaAccessToken."&domain=1&asin=$asin",
+                CURLOPT_URL => "https://api.keepa.com/product?key=".Configuration::keepaAccessToken."&domain=$domain&asin=$asin",
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => "",
                 CURLOPT_MAXREDIRS => 10,
