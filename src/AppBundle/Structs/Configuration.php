@@ -33,9 +33,18 @@ class Configuration
     const setDomainApiUrl = Configuration::serverUrl."/".Configuration::projectFolder."/web/app_dev.php/api/setDomain?";
     const showDomainsApiUrl = Configuration::serverUrl."/".Configuration::projectFolder."/web/app_dev.php/api/showDomains?";
 
+    /**
     const botID = "5a968c95e4b05207f7628608";
     const token = "vnbqX6cpvXUXFcOKr5RHJ7psSpHDRzO1hXBY8dkvn50ZkZyWML3YdtoCnKH7FSjC";
     const blockID = "5aca172de4b0336c5476ecbb";
+     */
+
+    const botID = "5a7f9efbe4b01cc9f958c300";
+    const token = "vnbqX6cpvXUXFcOKr5RHJ7psSpHDRzO1hXBY8dkvn50ZkZyWML3YdtoCnKH7FSjC";
+    const blockID = "5acfa6cce4b075d7d7c3ffa1";
+
+    //https://dashboard.chatfuel.com/#/bot/5a7f9efbe4b01cc9f958c300/structure/5acfa6cce4b075d7d7c3ffa1
+
     const keepaAccessToken = "bmccnl2m5292v3soegcl3abtfe8cd8dbbpg1r7oddnuirodk9h2imk8djkbht4lk";
     const fbAccessToken = "EAAEZChN9WqTYBALwFF6VLYSoqbYB45TzVjMm4TNk8ArI9sgdeqlrckWKTZBtdRipxZCy0gLTiGZCo1mowZCDehmD3rRBbcwSivHJvvxEzfspRVnXQFccpnqLevUbjdOMBYPlZCI44ZCXNLh6ukTJ5YuVz5TfDxmi5PS9sosCGumTZA6lIoBTEjq0";
 
