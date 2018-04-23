@@ -19,10 +19,6 @@ class FindOrSearchController extends Controller
      */
     public function getProductDetailsByASIN(Request $request)
     {
-//
-//        $asin = "Car";
-//        $userID = Configuration::userID;
-//        $userFirstName = Configuration::userFirstName;
 
         $asin = $request->get('asin');
         $userID = $request->get('id');
@@ -79,11 +75,6 @@ class FindOrSearchController extends Controller
 
 
         if(!$asinCheck) {
-
-            $message = array();
-            $message['messages'] = array();
-            $message['messages'][] = array('asin' => $asin );
-            return new JsonResponse($message);
 
             $curl = curl_init();
 
