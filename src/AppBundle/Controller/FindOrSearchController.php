@@ -79,6 +79,12 @@ class FindOrSearchController extends Controller
 
 
         if(!$asinCheck) {
+
+            $message = array();
+            $message['messages'] = array();
+            $message['messages'][] = array('asin' => $asin );
+            return new JsonResponse($message);
+
             $curl = curl_init();
 
             curl_setopt_array($curl, array(
